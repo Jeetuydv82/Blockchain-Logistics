@@ -1,3 +1,4 @@
+const path = require('path'); // ← ADD at top
 const dns = require('dns');
 dns.setDefaultResultOrder('ipv4first');
 dns.setServers(['8.8.8.8', '1.1.1.1']);
@@ -7,6 +8,7 @@ const dotenv    = require('dotenv');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes'); // ← ADD
 const shipmentRoutes = require('./routes/shipmentRoutes');
+const documentRoutes = require('./routes/documentRoutes');
 dotenv.config();
 connectDB();
 
@@ -18,6 +20,9 @@ app.use(express.json());
 // ROUTES
 app.use('/api/auth', authRoutes);
 app.use('/api/shipments', shipmentRoutes);
+app.use('/api/documents', documentRoutes); // ← ADD
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // ← ADD
+
 
 app.get('/', (req, res) => {
   res.json({
