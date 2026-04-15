@@ -1,2 +1,33 @@
-"node_modules/" 
-".env" 
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment variables (IMPORTANT - contains secrets!)
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build output
+dist/
+build/
+
+# Test coverage
+coverage/
+
+# Truffle/Hardhat (Blockchain specific)
+artifacts/
+cache/
+.truffle-temp/
+
+# MongoDB
+*.db
+
+# VS Code
+.vscode/
