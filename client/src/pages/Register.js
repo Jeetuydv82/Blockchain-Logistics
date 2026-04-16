@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ const Register = () => {
   });
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
+  const { colors }  = useTheme();
   const navigate     = useNavigate();
 
   const handleChange = (e) => {
@@ -28,6 +30,16 @@ const Register = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const styles = {
+    container : { display:'flex', justifyContent:'center', alignItems:'center', height:'100vh', background:colors.background },
+    card      : { background:colors.card, padding:'40px', borderRadius:'12px', width:'380px', boxShadow:'0 4px 20px rgba(0,0,0,0.1)' },
+    title     : { textAlign:'center', marginBottom:'5px', color:colors.text },
+    subtitle  : { textAlign:'center', color:colors.textSecondary, marginBottom:'25px' },
+    input     : { width:'100%', padding:'12px', margin:'8px 0', borderRadius:'8px', border:`1px solid ${colors.inputBorder}`, boxSizing:'border-box', fontSize:'14px', background:colors.inputBg, color:colors.text },
+    button    : { width:'100%', padding:'12px', background:colors.primary, color:'white', border:'none', borderRadius:'8px', fontSize:'16px', cursor:'pointer', marginTop:'10px' },
+    link      : { textAlign:'center', marginTop:'15px', fontSize:'14px', color:colors.textSecondary }
   };
 
   return (
@@ -59,16 +71,6 @@ const Register = () => {
       </div>
     </div>
   );
-};
-
-const styles = {
-  container : { display:'flex', justifyContent:'center', alignItems:'center', height:'100vh', background:'#f0f2f5' },
-  card      : { background:'white', padding:'40px', borderRadius:'12px', width:'380px', boxShadow:'0 4px 20px rgba(0,0,0,0.1)' },
-  title     : { textAlign:'center', marginBottom:'5px' },
-  subtitle  : { textAlign:'center', color:'#888', marginBottom:'25px' },
-  input     : { width:'100%', padding:'12px', margin:'8px 0', borderRadius:'8px', border:'1px solid #ddd', boxSizing:'border-box', fontSize:'14px' },
-  button    : { width:'100%', padding:'12px', background:'#4f46e5', color:'white', border:'none', borderRadius:'8px', fontSize:'16px', cursor:'pointer', marginTop:'10px' },
-  link      : { textAlign:'center', marginTop:'15px', fontSize:'14px' }
 };
 
 export default Register;

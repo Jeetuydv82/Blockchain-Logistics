@@ -1,12 +1,14 @@
 // client/src/pages/Dashboard.js
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import { getAllShipments } from '../services/api';
 import { toast } from 'react-toastify';
 
 const Dashboard = () => {
   const { user, logout }       = useAuth();
+  const { colors, toggleTheme, darkMode } = useTheme();
   const navigate               = useNavigate();
   const [shipments, setShipments] = useState([]);
   const [loading,   setLoading]   = useState(true);
@@ -43,6 +45,33 @@ const Dashboard = () => {
     return colors[status] || '#6b7280';
   };
 
+  const styles = {
+    container   : { padding:'20px', background:colors.background, minHeight:'100vh' },
+    header      : { display:'flex', justifyContent:'space-between', alignItems:'center', background:colors.card, padding:'15px 25px', borderRadius:'12px', marginBottom:'20px', boxShadow:'0 2px 8px rgba(0,0,0,0.08)' },
+    logo        : { margin:0, color:colors.primary, fontSize:'22px' },
+    headerRight : { display:'flex', alignItems:'center', gap:'12px' },
+    userInfo    : { color:colors.textSecondary, fontSize:'14px' },
+    newBtn      : { padding:'8px 18px', background:colors.primary, color:'white', border:'none', borderRadius:'8px', cursor:'pointer', fontWeight:'bold' },
+    logoutBtn   : { padding:'8px 18px', background:colors.danger, color:'white', border:'none', borderRadius:'8px', cursor:'pointer' },
+    themeToggle : { padding:'8px 14px', background:colors.border, color:colors.text, border:'none', borderRadius:'8px', cursor:'pointer', fontSize:'14px', fontWeight:'600' },
+    statsRow    : { display:'flex', gap:'15px', marginBottom:'20px' },
+    statCard    : { background:colors.card, padding:'20px 25px', borderRadius:'12px', flex:1, textAlign:'center', boxShadow:'0 2px 8px rgba(0,0,0,0.08)' },
+    statNumber  : { fontSize:'32px', fontWeight:'bold', color:colors.primary },
+    statLabel   : { color:colors.textMuted, fontSize:'14px', marginTop:'4px' },
+    tableCard   : { background:colors.card, borderRadius:'12px', padding:'25px', boxShadow:'0 2px 8px rgba(0,0,0,0.08)' },
+    tableTitle  : { margin:'0 0 20px 0', color:colors.text },
+    table       : { width:'100%', borderCollapse:'collapse' },
+    tableHeader : { background:colors.borderLight },
+    th          : { padding:'12px 15px', textAlign:'left', fontSize:'13px', color:colors.textSecondary, fontWeight:'600', borderBottom:`2px solid ${colors.border}` },
+    tableRow    : { borderBottom:`1px solid ${colors.borderLight}` },
+    td          : { padding:'12px 15px', fontSize:'14px', color:colors.text },
+    tracking    : { background:colors.badge, padding:'3px 8px', borderRadius:'4px', fontSize:'12px', color:colors.textSecondary },
+    badge       : { color:'white', padding:'4px 10px', borderRadius:'20px', fontSize:'12px', fontWeight:'600' },
+    viewBtn     : { padding:'5px 14px', background:colors.primary, color:'white', border:'none', borderRadius:'6px', cursor:'pointer', fontSize:'13px' },
+    loading     : { textAlign:'center', color:colors.textMuted, padding:'40px' },
+    empty       : { textAlign:'center', color:colors.textMuted, padding:'40px' }
+  };
+
   return (
     <div style={styles.container}>
 
@@ -50,6 +79,9 @@ const Dashboard = () => {
       <div style={styles.header}>
         <h1 style={styles.logo}>📦 Blockchain Logistics</h1>
         <div style={styles.headerRight}>
+          <button style={styles.themeToggle} onClick={toggleTheme}>
+            {darkMode ? '☀️ Light' : '🌙 Dark'}
+          </button>
           <span style={styles.userInfo}>
             👤 {user?.name} | {user?.role?.toUpperCase()}
           </span>
@@ -72,19 +104,19 @@ const Dashboard = () => {
           <div style={styles.statLabel}>Total Shipments</div>
         </div>
         <div style={styles.statCard}>
-          <div style={{...styles.statNumber, color:'#f59e0b'}}>
+          <div style={{...styles.statNumber, color: colors.warning}}>
             {shipments.filter(s => s.status === 'pending').length}
           </div>
           <div style={styles.statLabel}>Pending</div>
         </div>
         <div style={styles.statCard}>
-          <div style={{...styles.statNumber, color:'#8b5cf6'}}>
+          <div style={{...styles.statNumber, color: colors.purple}}>
             {shipments.filter(s => s.status === 'in_transit').length}
           </div>
           <div style={styles.statLabel}>In Transit</div>
         </div>
         <div style={styles.statCard}>
-          <div style={{...styles.statNumber, color:'#10b981'}}>
+          <div style={{...styles.statNumber, color: colors.success}}>
             {shipments.filter(s => s.status === 'delivered').length}
           </div>
           <div style={styles.statLabel}>Delivered</div>
@@ -150,32 +182,6 @@ const Dashboard = () => {
       </div>
     </div>
   );
-};
-
-const styles = {
-  container   : { padding:'20px', background:'#f0f2f5', minHeight:'100vh' },
-  header      : { display:'flex', justifyContent:'space-between', alignItems:'center', background:'white', padding:'15px 25px', borderRadius:'12px', marginBottom:'20px', boxShadow:'0 2px 8px rgba(0,0,0,0.08)' },
-  logo        : { margin:0, color:'#4f46e5', fontSize:'22px' },
-  headerRight : { display:'flex', alignItems:'center', gap:'12px' },
-  userInfo    : { color:'#666', fontSize:'14px' },
-  newBtn      : { padding:'8px 18px', background:'#4f46e5', color:'white', border:'none', borderRadius:'8px', cursor:'pointer', fontWeight:'bold' },
-  logoutBtn   : { padding:'8px 18px', background:'#ef4444', color:'white', border:'none', borderRadius:'8px', cursor:'pointer' },
-  statsRow    : { display:'flex', gap:'15px', marginBottom:'20px' },
-  statCard    : { background:'white', padding:'20px 25px', borderRadius:'12px', flex:1, textAlign:'center', boxShadow:'0 2px 8px rgba(0,0,0,0.08)' },
-  statNumber  : { fontSize:'32px', fontWeight:'bold', color:'#4f46e5' },
-  statLabel   : { color:'#888', fontSize:'14px', marginTop:'4px' },
-  tableCard   : { background:'white', borderRadius:'12px', padding:'25px', boxShadow:'0 2px 8px rgba(0,0,0,0.08)' },
-  tableTitle  : { margin:'0 0 20px 0', color:'#333' },
-  table       : { width:'100%', borderCollapse:'collapse' },
-  tableHeader : { background:'#f8fafc' },
-  th          : { padding:'12px 15px', textAlign:'left', fontSize:'13px', color:'#666', fontWeight:'600', borderBottom:'2px solid #e2e8f0' },
-  tableRow    : { borderBottom:'1px solid #f1f5f9' },
-  td          : { padding:'12px 15px', fontSize:'14px', color:'#333' },
-  tracking    : { background:'#f1f5f9', padding:'3px 8px', borderRadius:'4px', fontSize:'12px' },
-  badge       : { color:'white', padding:'4px 10px', borderRadius:'20px', fontSize:'12px', fontWeight:'600' },
-  viewBtn     : { padding:'5px 14px', background:'#4f46e5', color:'white', border:'none', borderRadius:'6px', cursor:'pointer', fontSize:'13px' },
-  loading     : { textAlign:'center', color:'#888', padding:'40px' },
-  empty       : { textAlign:'center', color:'#888', padding:'40px' }
 };
 
 export default Dashboard;

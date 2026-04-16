@@ -2,10 +2,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useTheme } from '../context/ThemeContext';
 import { createShipment } from '../services/api';
 
 const CreateShipment = () => {
   const navigate = useNavigate();
+  const { colors } = useTheme();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title          : '',
@@ -37,6 +39,19 @@ const CreateShipment = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const styles = {
+    container  : { padding:'20px', background:colors.background, minHeight:'100vh' },
+    card       : { background:colors.card, borderRadius:'12px', padding:'30px', maxWidth:'650px', margin:'0 auto', boxShadow:'0 2px 8px rgba(0,0,0,0.08)' },
+    header     : { display:'flex', alignItems:'center', gap:'15px', marginBottom:'25px' },
+    backBtn    : { padding:'8px 15px', background:colors.badge, color:colors.text, border:'none', borderRadius:'8px', cursor:'pointer', fontSize:'14px' },
+    title      : { margin:0, color:colors.text },
+    section    : { marginBottom:'25px' },
+    sectionTitle: { color:colors.primary, marginBottom:'12px', fontSize:'16px' },
+    input      : { width:'100%', padding:'11px', margin:'6px 0', borderRadius:'8px', border:`1px solid ${colors.inputBorder}`, boxSizing:'border-box', fontSize:'14px', background:colors.inputBg, color:colors.text },
+    row        : { display:'flex', gap:'10px' },
+    submitBtn  : { width:'100%', padding:'13px', background:colors.primary, color:'white', border:'none', borderRadius:'8px', fontSize:'16px', cursor:'pointer', fontWeight:'bold', marginTop:'10px' }
   };
 
   return (
@@ -101,19 +116,6 @@ const CreateShipment = () => {
       </div>
     </div>
   );
-};
-
-const styles = {
-  container  : { padding:'20px', background:'#f0f2f5', minHeight:'100vh' },
-  card       : { background:'white', borderRadius:'12px', padding:'30px', maxWidth:'650px', margin:'0 auto', boxShadow:'0 2px 8px rgba(0,0,0,0.08)' },
-  header     : { display:'flex', alignItems:'center', gap:'15px', marginBottom:'25px' },
-  backBtn    : { padding:'8px 15px', background:'#f1f5f9', border:'none', borderRadius:'8px', cursor:'pointer', fontSize:'14px' },
-  title      : { margin:0, color:'#333' },
-  section    : { marginBottom:'25px' },
-  sectionTitle: { color:'#4f46e5', marginBottom:'12px', fontSize:'16px' },
-  input      : { width:'100%', padding:'11px', margin:'6px 0', borderRadius:'8px', border:'1px solid #ddd', boxSizing:'border-box', fontSize:'14px' },
-  row        : { display:'flex', gap:'10px' },
-  submitBtn  : { width:'100%', padding:'13px', background:'#4f46e5', color:'white', border:'none', borderRadius:'8px', fontSize:'16px', cursor:'pointer', fontWeight:'bold', marginTop:'10px' }
 };
 
 export default CreateShipment;
