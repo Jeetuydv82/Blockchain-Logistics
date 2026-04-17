@@ -15,14 +15,13 @@ const documentABI = JSON.parse(
     path.join(__dirname, './blockchain/DocumentVerification.json'), 'utf8'
   )
 ).abi;
-
 // ─── Addresses ────────────────────────────────────────
-const SHIPMENT_CONTRACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
-const DOCUMENT_CONTRACT_ADDRESS = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
+const SHIPMENT_CONTRACT_ADDRESS = '0x06E23FEba23f68230C5E57672508C3DC925FB8f0';
+const DOCUMENT_CONTRACT_ADDRESS = '0xBc8438e9BbEB3a71aa5836d3c9384B2E274491cb';
 
 // ─── Provider & Signer ────────────────────────────────
-const provider    = new ethers.JsonRpcProvider('http://127.0.0.1:8545');
-const PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+const provider    = new ethers.JsonRpcProvider('https://eth-sepolia.g.alchemy.com/v2/684lCNrsBC8E08ZVVJqDT');
+const PRIVATE_KEY = '94ef6126933a16f8aac988533893025efe6060291e5c43aeda8c2a542f2ca1fa';
 const signer      = new ethers.Wallet(PRIVATE_KEY, provider);
 
 // ─── Contract Instances ───────────────────────────────

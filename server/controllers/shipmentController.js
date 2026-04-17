@@ -76,23 +76,12 @@ const updateStatus = async (req, res) => {
       note      : note || `Status updated to ${status}`,
       updatedBy : req.user.id,
       timestamp : new Date()
-    });
-
-    // 2. Map status string to contract enum
-    const statusMap = {
-      'pending'          : 0,
-      'picked_up'        : 1,
-      'in_transit'       : 2,
-      'out_for_delivery' : 3,
-      'delivered'        : 4,
-      'cancelled'        : 5
-    };
-
-    // 3. Update on blockchain
+    })
+    // 2. Update on blockchain
     try {
       const tx = await shipmentContract.updateStatus(
         shipment.trackingNumber,
-        statusMap[status],
+        status,
         note || `Status updated to ${status}`
       );
       const receipt = await tx.wait();
