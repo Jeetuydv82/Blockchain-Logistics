@@ -1,4 +1,5 @@
 // server/config/blockchain.js
+require('dotenv').config();
 const { ethers } = require('ethers');
 const path       = require('path');
 const fs         = require('fs');
@@ -20,7 +21,10 @@ const SHIPMENT_CONTRACT_ADDRESS = process.env.SHIPMENT_CONTRACT;
 const DOCUMENT_CONTRACT_ADDRESS = process.env.DOCUMENT_CONTRACT;
 // ─── Provider & Signer ────────────────────────────────
 const provider    = new ethers.JsonRpcProvider(process.env.ALCHEMY_URL);
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
+let PRIVATE_KEY = process.env.PRIVATE_KEY;
+if (PRIVATE_KEY && !PRIVATE_KEY.startsWith('0x')) {
+  PRIVATE_KEY = '0x' + PRIVATE_KEY;
+}
 const signer      = new ethers.Wallet(PRIVATE_KEY, provider);
 
 // ─── Contract Instances ───────────────────────────────
