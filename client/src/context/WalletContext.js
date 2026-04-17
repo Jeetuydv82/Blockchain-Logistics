@@ -22,7 +22,7 @@ export const WalletProvider = ({ children }) => {
         window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
       }
     };
-  }, []);
+}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const checkConnection = async () => {
     if (!window.ethereum) return;

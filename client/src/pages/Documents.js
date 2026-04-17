@@ -36,7 +36,7 @@ const Documents = () => {
       const formData = new FormData();
       formData.append('document',   uploadFile);
       formData.append('shipmentId', shipmentId);
-      const res = await uploadDocument(formData);
+      await uploadDocument(formData);
       toast.success('Document uploaded & recorded on blockchain!');
       setUploadFile(null);
       setShipmentId('');
