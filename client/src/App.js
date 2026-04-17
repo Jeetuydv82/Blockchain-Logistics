@@ -1,4 +1,5 @@
 // client/src/App.js
+import { WalletProvider } from './context/WalletContext';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,6 +12,7 @@ import Register       from './pages/Register';
 import Dashboard      from './pages/Dashboard';
 import CreateShipment from './pages/CreateShipment';
 import ShipmentDetail from './pages/ShipmentDetail';
+import Documents      from './pages/Documents';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -35,6 +37,9 @@ const ThemedApp = () => {
         <Route path="/shipments/:id" element={
           <ProtectedRoute><ShipmentDetail /></ProtectedRoute>
         } />
+        <Route path="/documents" element={
+          <ProtectedRoute><Documents /></ProtectedRoute>
+        } />
         <Route path="/" element={<Navigate to="/dashboard" />} />
       </Routes>
       <ToastContainer 
@@ -43,15 +48,16 @@ const ThemedApp = () => {
       />
     </>
   );
-};
-
+}
 function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <BrowserRouter>
-          <ThemedApp />
-        </BrowserRouter>
+        <WalletProvider>
+          <BrowserRouter>
+            <ThemedApp />
+          </BrowserRouter>
+        </WalletProvider>
       </AuthProvider>
     </ThemeProvider>
   );

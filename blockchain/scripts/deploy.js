@@ -1,17 +1,20 @@
-// blockchain/scripts/deploy.js
 const hre = require("hardhat");
 
 async function main() {
-  console.log("🚀 Deploying ShipmentTracking contract...");
+  const [deployer] = await hre.ethers.getSigners();
+  console.log("Deploying with account:", deployer.address);
 
+  // ─── Deploy ShipmentTracking ───────────────────────
   const ShipmentTracking = await hre.ethers.getContractFactory("ShipmentTracking");
-  const contract         = await ShipmentTracking.deploy();
+  const shipmentContract = await ShipmentTracking.deploy();
+  await shipmentContract.waitForDeployment();
+  console.log("✅ ShipmentTracking deployed to:", await shipmentContract.getAddress());
 
-  await contract.waitForDeployment();
-
-  const address = await contract.getAddress();
-  console.log(`✅ ShipmentTracking deployed to: ${address}`);
-  console.log(`📌 Owner: ${(await hre.ethers.getSigners())[0].address}`);
+  // ─── Deploy DocumentVerification ──────────────────
+  const DocumentVerification = await hre.ethers.getContractFactory("DocumentVerification");
+  const documentContract     = await DocumentVerification.deploy();
+  await documentContract.waitForDeployment();
+  console.log("✅ DocumentVerification deployed to:", await documentContract.getAddress());
 }
 
 main().catch((error) => {

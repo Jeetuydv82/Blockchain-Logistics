@@ -1,4 +1,5 @@
 // client/src/pages/Dashboard.js
+import { useWallet } from '../context/WalletContext';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -12,7 +13,7 @@ const Dashboard = () => {
   const navigate               = useNavigate();
   const [shipments, setShipments] = useState([]);
   const [loading,   setLoading]   = useState(true);
-
+  const { account, balance, connected, connectWallet, disconnectWallet, shortAddress, loading: walletLoading } = useWallet();
   useEffect(() => {
     fetchShipments();
   }, []);
@@ -79,12 +80,39 @@ const Dashboard = () => {
       <div style={styles.header}>
         <h1 style={styles.logo}>📦 Blockchain Logistics</h1>
         <div style={styles.headerRight}>
-          <button style={styles.themeToggle} onClick={toggleTheme}>
+        <button style={styles.themeToggle} onClick={toggleTheme}>
             {darkMode ? '☀️ Light' : '🌙 Dark'}
           </button>
+
+          {/* WALLET */}
+          {connected ? (
+            <div style={{ display:'flex', alignItems:'center', gap:'8px', background:'#f0fdf4', border:'1px solid #86efac', borderRadius:'8px', padding:'6px 12px' }}>
+              <span>🦊</span>
+              <div>
+                <div style={{ color:'#16a34a', fontWeight:'bold', fontSize:'13px' }}>{shortAddress(account)}</div>
+                <div style={{ color:'#15803d', fontSize:'12px' }}>{balance} ETH</div>
+              </div>
+              <button onClick={disconnectWallet} style={{ background:'none', border:'none', cursor:'pointer', color:'#ef4444', fontSize:'16px' }}>✕</button>
+            </div>
+          ) : (
+            <button
+              style={{ padding:'8px 14px', background:'#f97316', color:'white', border:'none', borderRadius:'8px', cursor:'pointer', fontWeight:'bold', fontSize:'13px' }}
+              onClick={connectWallet}
+              disabled={walletLoading}
+            >
+              {walletLoading ? 'Connecting...' : '🦊 Connect Wallet'}
+            </button>
+          )}
+
           <span style={styles.userInfo}>
             👤 {user?.name} | {user?.role?.toUpperCase()}
           </span>
+          <button
+            style={{...styles.newBtn, background: colors.success || '#10b981'}}
+            onClick={() => navigate('/documents')}
+          >
+            📄 Documents
+          </button>
           <button
             style={styles.newBtn}
             onClick={() => navigate('/shipments/create')}

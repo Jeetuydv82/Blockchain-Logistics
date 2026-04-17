@@ -25,3 +25,11 @@ export const getAllShipments  = ()     => API.get('/shipments');
 export const getShipment     = (id)   => API.get(`/shipments/${id}`);
 export const updateStatus    = (id, data) => API.put(`/shipments/${id}/status`, data);
 export const deleteShipment  = (id)   => API.delete(`/shipments/${id}`);
+// Document APIs
+export const uploadDocument  = (formData) => API.post('/documents/upload', formData, {
+  headers: { 'Content-Type': 'multipart/form-data' }
+});
+export const verifyDocument  = (formData) => API.post('/documents/verify', formData, {
+  headers: { 'Content-Type': 'multipart/form-data' }
+});
+export const getAllDocuments  = () => API.get('/documents');

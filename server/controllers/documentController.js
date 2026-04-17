@@ -1,11 +1,11 @@
 // server/controllers/documentController.js
-const Document = require('../models/Document');
-const crypto   = require('crypto');
-const fs       = require('fs');
-const path     = require('path');
+const Document                     = require('../models/Document');
+const { documentContract }         = require('../config/blockchain');
+const crypto                       = require('crypto');
+const fs                           = require('fs');
+const path                         = require('path');
 
 // ─── UPLOAD DOCUMENT ──────────────────────────────────
-// POST /api/documents/upload
 const uploadDocument = async (req, res) => {
   try {
     if (!req.file) {
@@ -32,21 +32,43 @@ const uploadDocument = async (req, res) => {
       uploadedBy   : req.user.id
     });
 
+    // ─── Store hash on blockchain ──────────────────
+    try {
+      const shipmentId = req.body.shipmentId || 'NO_SHIPMENT';
+
+      const tx = await documentContract.storeDocument(
+        fileHash,
+        req.file.originalname,
+        shipmentId
+      );
+      const receipt = await tx.wait();
+
+      document.blockchainTxHash = receipt.hash;
+      document.isVerified       = true;
+      await document.save();
+
+      console.log('✅ Document hash stored on blockchain:', receipt.hash);
+
+    } catch (blockchainError) {
+      console.error('⚠️ Blockchain error:', blockchainError.message);
+    }
+
     res.status(201).json({
       success  : true,
       message  : 'Document uploaded successfully',
       document : {
-        id           : document._id,
-        originalName : document.originalName,
-        fileHash     : document.fileHash,
-        fileSize     : document.fileSize,
-        fileType     : document.fileType,
-        createdAt    : document.createdAt
+        id                : document._id,
+        originalName      : document.originalName,
+        fileHash          : document.fileHash,
+        fileSize          : document.fileSize,
+        fileType          : document.fileType,
+        blockchainTxHash  : document.blockchainTxHash,
+        isVerified        : document.isVerified,
+        createdAt         : document.createdAt
       }
     });
 
   } catch (error) {
-    // If duplicate hash → file already exists
     if (error.code === 11000) {
       return res.status(400).json({
         success : false,
@@ -61,7 +83,6 @@ const uploadDocument = async (req, res) => {
 };
 
 // ─── VERIFY DOCUMENT ──────────────────────────────────
-// POST /api/documents/verify
 const verifyDocument = async (req, res) => {
   try {
     if (!req.file) {
@@ -80,32 +101,54 @@ const verifyDocument = async (req, res) => {
     // Clean up temp file
     fs.unlinkSync(req.file.path);
 
-    // Search for this hash in database
+    // ─── Check blockchain first ────────────────────
+    let blockchainVerified = false;
+    let blockchainData     = null;
+
+    try {
+      const result = await documentContract.verifyDocument(fileHash);
+      blockchainVerified = result[0]; // isVerified boolean
+      if (blockchainVerified) {
+        blockchainData = {
+          fileName   : result[1],
+          shipmentId : result[2],
+          uploadedBy : result[3],
+          uploadedAt : new Date(Number(result[4]) * 1000).toLocaleString()
+        };
+      }
+    } catch (blockchainError) {
+      console.error('⚠️ Blockchain verify error:', blockchainError.message);
+    }
+
+    // ─── Check MongoDB ─────────────────────────────
     const document = await Document.findOne({ fileHash })
       .populate('uploadedBy', 'name email')
       .populate('shipment',   'trackingNumber title');
 
-    if (!document) {
+    if (!document && !blockchainVerified) {
       return res.json({
-        success    : true,
-        verified   : false,
-        message    : '❌ Document NOT found — may be tampered or unregistered',
+        success            : true,
+        verified           : false,
+        blockchainVerified : false,
+        message            : '❌ Document NOT found — may be tampered or unregistered',
         fileHash
       });
     }
 
     res.json({
-      success    : true,
-      verified   : true,
-      message    : '✅ Document verified — authentic and untampered',
+      success            : true,
+      verified           : true,
+      blockchainVerified,
+      message            : '✅ Document verified — authentic and untampered',
       fileHash,
-      document   : {
+      blockchainData,
+      document : document ? {
         id           : document._id,
         originalName : document.originalName,
         uploadedBy   : document.uploadedBy,
         shipment     : document.shipment,
         uploadedAt   : document.createdAt
-      }
+      } : null
     });
 
   } catch (error) {
@@ -117,7 +160,6 @@ const verifyDocument = async (req, res) => {
 };
 
 // ─── GET ALL DOCUMENTS ────────────────────────────────
-// GET /api/documents
 const getAllDocuments = async (req, res) => {
   try {
     const documents = await Document.find({ uploadedBy: req.user.id })
