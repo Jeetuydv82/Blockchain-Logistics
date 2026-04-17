@@ -118,7 +118,36 @@ const ShipmentDetail = () => {
             <div style={styles.routeAddress}>{shipment.destination.address}, {shipment.destination.country}</div>
           </div>
         </div>
-
+        {/* BLOCKCHAIN INFO */}
+        {shipment.blockchainTxHash && (
+          <div style={{
+            background  : '#f0fdf4',
+            border      : '1px solid #86efac',
+            borderRadius: '12px',
+            padding     : '20px',
+            marginBottom: '20px'
+          }}>
+            <h3 style={{ margin:'0 0 12px 0', color:'#16a34a' }}>⛓️ Blockchain Verified</h3>
+            <div style={{ fontSize:'13px', color:'#15803d', marginBottom:'6px' }}>
+              <strong>Tx Hash:</strong>
+            </div>
+            <code style={{
+              fontSize    : '12px',
+              color       : '#15803d',
+              wordBreak   : 'break-all',
+              background  : '#dcfce7',
+              padding     : '8px',
+              borderRadius: '6px',
+              display     : 'block',
+              marginBottom: '8px'
+            }}>
+              {shipment.blockchainTxHash}
+            </code>
+            <div style={{ fontSize:'13px', color:'#16a34a' }}>
+              <strong>Status:</strong> {shipment.blockchainStatus} ✅
+            </div>
+          </div>
+        )}
         {/* UPDATE STATUS */}
         {(user?.role === 'admin' || user?.role === 'transporter') && (
           <div style={styles.updateCard}>
