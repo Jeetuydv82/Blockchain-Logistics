@@ -16,12 +16,11 @@ const documentABI = JSON.parse(
   )
 ).abi;
 // ─── Addresses ────────────────────────────────────────
-const SHIPMENT_CONTRACT_ADDRESS = '0x06E23FEba23f68230C5E57672508C3DC925FB8f0';
-const DOCUMENT_CONTRACT_ADDRESS = '0xBc8438e9BbEB3a71aa5836d3c9384B2E274491cb';
-
+const SHIPMENT_CONTRACT_ADDRESS = process.env.SHIPMENT_CONTRACT;
+const DOCUMENT_CONTRACT_ADDRESS = process.env.DOCUMENT_CONTRACT;
 // ─── Provider & Signer ────────────────────────────────
-const provider    = new ethers.JsonRpcProvider('https://eth-sepolia.g.alchemy.com/v2/684lCNrsBC8E08ZVVJqDT');
-const PRIVATE_KEY = '94ef6126933a16f8aac988533893025efe6060291e5c43aeda8c2a542f2ca1fa';
+const provider    = new ethers.JsonRpcProvider(process.env.ALCHEMY_URL);
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const signer      = new ethers.Wallet(PRIVATE_KEY, provider);
 
 // ─── Contract Instances ───────────────────────────────
