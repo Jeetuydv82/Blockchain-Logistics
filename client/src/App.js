@@ -91,7 +91,7 @@ const ThemedApp = () => {
   };
   
   const pageContainerStyle = {
-    padding: 24px,
+    padding: '24px',
     maxWidth: 1200,
     margin: '0 auto',
   };
