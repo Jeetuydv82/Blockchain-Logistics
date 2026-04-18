@@ -1,0 +1,91 @@
+{
+  "app": {
+    "title": "Blockchain Logistics",
+    "loading": "Loading..."
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "name": "Full Name",
+    "role": "Role",
+    "loginSuccess": "Login successful!",
+    "registerSuccess": "Registration successful!",
+    "loginFailed": "Login failed",
+    "registerFailed": "Registration failed"
+  },
+  "roles": {
+    "admin": "Administrator",
+    "supplier": "Supplier",
+    "transporter": "Transporter",
+    "customer": "Customer"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "createShipment": "Create Shipment",
+    "documents": "Documents",
+    "scanQR": "Scan QR"
+  },
+  "shipment": {
+    "title": "Shipment Title",
+    "description": "Description",
+    "origin": "Origin",
+    "destination": "Destination",
+    "status": "Status",
+    "trackingNumber": "Tracking Number",
+    "create": "Create Shipment",
+    "createSuccess": "Shipment created successfully!",
+    "createFailed": "Failed to create shipment",
+    "history": "Status History",
+    "updateStatus": "Update Status",
+    "blockchainVerified": "Blockchain Verified",
+    "track": "Track This Shipment",
+    "qrCode": "QR Code",
+    "downloadQR": "Download QR Code",
+    "notFound": "Shipment not found",
+    "progress": "Progress"
+  },
+  "status": {
+    "pending": "Pending",
+    "picked_up": "Picked Up",
+    "in_transit": "In Transit",
+    "out_for_delivery": "Out for Delivery",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled"
+  },
+  "document": {
+    "upload": "Upload Document",
+    "verify": "Verify Document",
+    "filename": "Filename",
+    "uploadedBy": "Uploaded By",
+    "uploadSuccess": "Document uploaded successfully!",
+    "uploadFailed": "Failed to upload document"
+  },
+  "buttons": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "update": "Update",
+    "back": "Back",
+    "save": "Save"
+  },
+  "messages": {
+    "error": "Error",
+    "success": "Success",
+    "confirmDelete": "Are you sure you want to delete this?",
+    "noData": "No data available"
+  },
+  "publicTracker": {
+    "title": "Shipment Tracking",
+    "trackingHistory": "Tracking History",
+    "notFound": "Shipment not found"
+  },
+  "qrScanner": {
+    "title": "QR Scanner",
+    "scanQR": "Scan QR Code",
+    "enterManually": "Or enter tracking code manually",
+    "trackShipment": "Track Shipment"
+  }
+}

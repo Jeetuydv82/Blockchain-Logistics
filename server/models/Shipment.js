@@ -67,7 +67,29 @@ const ShipmentSchema = new mongoose.Schema(
         },
         timestamp : { type: Date, default: Date.now }
       }
-    ]
+    ],
+
+    // IoT Sensor Tracking
+    requiresTemperatureTracking: { type: Boolean, default: false },
+    tempThreshold: { type: Number, default: 30 },
+    sensorAlerts: [
+      {
+        reason: String,
+        temperature: Number,
+        humidity: Number,
+        timestamp: Date,
+        resolved: { type: Boolean, default: false }
+      }
+    ],
+
+    // Payment
+    paymentStatus: {
+      type: String,
+      enum: ['none', 'pending', 'locked', 'released', 'refunded'],
+      default: 'none'
+    },
+    paymentAmount: { type: Number, default: 0 },
+    paymentTxHash: { type: String, default: null }
   },
   {
     timestamps: true

@@ -1,12 +1,27 @@
 // server/middleware/auth.js
-const jwt  = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const protect = async (req, res, next) => {
+  // Skip auth for public routes
+  const publicRoutes = [
+    '/api/shipments/public/',
+    '/api/health',
+    '/api/auth/login',
+    '/api/auth/register'
+  ];
+  
+  const isPublicRoute = publicRoutes.some(route => 
+    req.originalUrl.includes(route)
+  );
+  
+  if (isPublicRoute) {
+    return next();
+  }
+  
   try {
     let token;
 
-    // Check for token in headers
     if (req.headers.authorization &&
         req.headers.authorization.startsWith('Bearer')) {
       token = req.headers.authorization.split(' ')[1];
@@ -14,23 +29,19 @@ const protect = async (req, res, next) => {
 
     if (!token) {
       return res.status(401).json({
-        success : false,
-        message : 'Not authorized, no token'
+        success: false,
+        message: 'Not authorized, no token'
       });
     }
 
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Attach user to request
     req.user = await User.findById(decoded.id);
-
     next();
 
   } catch (error) {
     res.status(401).json({
-      success : false,
-      message : 'Not authorized, token failed'
+      success: false,
+      message: 'Not authorized, token failed'
     });
   }
 };

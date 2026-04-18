@@ -1,0 +1,91 @@
+{
+  "app": {
+    "title": "ब्लॉकचेन लॉजिस्टिक्स",
+    "loading": "लोड हो रहा है..."
+  },
+  "auth": {
+    "login": "लॉग इन",
+    "register": "रजिस्टर",
+    "logout": "लॉग आउट",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "name": "पूरा नाम",
+    "role": "भूमिका",
+    "loginSuccess": "लॉगिन सफल!",
+    "registerSuccess": "रजिस्ट्रेशन सफल!",
+    "loginFailed": "लॉगिन विफल",
+    "registerFailed": "रजिस्ट्रेशन विफल"
+  },
+  "roles": {
+    "admin": "एडमिनिस्ट्रेटर",
+    "supplier": "सप्लायर",
+    "transporter": "ट्रांसपोर्टर",
+    "customer": "ग्राहक"
+  },
+  "nav": {
+    "dashboard": "डैशबोर्ड",
+    "createShipment": "शिपमेंट बनाएं",
+    "documents": "दस्तावेज़",
+    "scanQR": "QR स्कैन करें"
+  },
+  "shipment": {
+    "title": "शिपमेंट शीर्षक",
+    "description": "विवरण",
+    "origin": "मूल स्थान",
+    "destination": "गंतव्य",
+    "status": "स्थिति",
+    "trackingNumber": "ट्रैकिंग नंबर",
+    "create": "शिपमेंट बनाएं",
+    "createSuccess": "शिपमेंट सफलतापूर्वक बनाई गई!",
+    "createFailed": "शिपमेंट बनाने में विफल",
+    "history": "स्थिति इतिहास",
+    "updateStatus": "स्थिति अपडेट करें",
+    "blockchainVerified": "ब्लॉकचेन सत्यापित",
+    "track": "इस शिपमेंट को ट्रैक करें",
+    "qrCode": "QR कोड",
+    "downloadQR": "QR कोड डाउनलोड करें",
+    "notFound": "शिपमेंट नहीं मिली",
+    "progress": "प्रगति"
+  },
+  "status": {
+    "pending": "लंबित",
+    "picked_up": "पिक अप",
+    "in_transit": "रास्ते में",
+    "out_for_delivery": "डिलीवरी के लिए निकला",
+    "delivered": "डिलीवर हो गया",
+    "cancelled": "रद्द"
+  },
+  "document": {
+    "upload": "दस्तावेज़ अपलोड करें",
+    "verify": "दस्तावेज़ सत्यापित करें",
+    "filename": "फ़ाइल का नाम",
+    "uploadedBy": "द्वारा अपलोड किया गया",
+    "uploadSuccess": "दस्तावेज़ सफलतापूर्वक अपलोड हो गया!",
+    "uploadFailed": "दस्तावेज़ अपलोड करने में विफल"
+  },
+  "buttons": {
+    "submit": "सबमिट",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं",
+    "update": "अपडेट",
+    "back": "वापस",
+    "save": "सहेजें"
+  },
+  "messages": {
+    "error": "त्रुटि",
+    "success": "सफलता",
+    "confirmDelete": "क्या आप इसे हटाना चाहते हैं?",
+    "noData": "कोई डेटा उपलब्ध नहीं"
+  },
+  "publicTracker": {
+    "title": "शिपमेंट ट्रैकिंग",
+    "trackingHistory": "ट्रैकिंग इतिहास",
+    "notFound": "शिपमेंट नहीं मिली"
+  },
+  "qrScanner": {
+    "title": "QR स्कैनर",
+    "scanQR": "QR कोड स्कैन करें",
+    "enterManually": "या ट्रैकिंग कोड मैन्युअल दर्ज करें",
+    "trackShipment": "शिपमेंट ट्रैक करें"
+  }
+}

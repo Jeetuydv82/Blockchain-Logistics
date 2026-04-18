@@ -1,6 +1,10 @@
 // server/controllers/shipmentController.js
 const Shipment         = require('../models/Shipment');
-const { shipmentContract } = require('../config/blockchain'); // ← ADD
+const User            = require('../models/User');
+const { shipmentContract } = require('../config/blockchain');
+const { predictDelivery } = require('../utils/predictionService');
+const { sendShipmentCreated, sendStatusUpdate } = require('../utils/emailService');
+const { sendDeliveryNotification } = require('../utils/smsService');
 
 // ─── CREATE SHIPMENT ───────────────────────────────────
 const createShipment = async (req, res) => {
@@ -47,6 +51,16 @@ const createShipment = async (req, res) => {
       message  : 'Shipment created successfully',
       shipment
     });
+
+    // Send email notification
+    try {
+      const user = await User.findById(req.user.id).select('email name emailNotifications');
+      if (user?.emailNotifications && user.email) {
+        sendShipmentCreated({ email: user.email, name: user.name }, shipment);
+      }
+    } catch (emailError) {
+      console.log('Email notification error:', emailError.message);
+    }
 
   } catch (error) {
     res.status(500).json({
@@ -100,6 +114,23 @@ const updateStatus = async (req, res) => {
       message  : 'Shipment status updated',
       shipment
     });
+
+    // Send notifications
+    try {
+      const user = await User.findById(shipment.createdBy).select('email name phone emailNotifications smsNotifications');
+      
+      if (user?.emailNotifications && user.email) {
+        // Send email
+        sendStatusUpdate({ email: user.email, name: user.name }, shipment, status, note);
+      }
+
+      if (user?.smsNotifications && user.phone && (status === 'out_for_delivery' || status === 'delivered')) {
+        // Send SMS
+        sendDeliveryNotification(user.phone, shipment.trackingNumber, status);
+      }
+    } catch (notificationError) {
+      console.log('Notification error:', notificationError.message);
+    }
 
   } catch (error) {
     res.status(500).json({
@@ -193,10 +224,62 @@ const deleteShipment = async (req, res) => {
   }
 };
 
+// ─── GET SHIPMENT BY TRACKING NUMBER (PUBLIC) ─────────────────────
+const getShipmentByTracking = async (req, res) => {
+  try {
+    const shipment = await Shipment.findOne({
+      trackingNumber: req.params.trackingNumber
+    }).select('-blockchainTxHash -blockchainStatus -createdBy');
+
+    if (!shipment) {
+      return res.status(404).json({
+        success : false,
+        message : 'Shipment not found'
+      });
+    }
+
+    res.json({ success: true, shipment });
+
+  } catch (error) {
+    res.status(500).json({
+      success : false,
+      message : error.message
+    });
+  }
+};
+
+// ─── PREDICT DELIVERY ───────────────────────────────────────────────
+const predictDeliveryTime = async (req, res) => {
+  try {
+    const shipment = await Shipment.findById(req.params.id);
+    if (!shipment) {
+      return res.status(404).json({
+        success : false,
+        message : 'Shipment not found'
+      });
+    }
+
+    const prediction = await predictDelivery(shipment._id);
+
+    res.json({
+      success : true,
+      prediction
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success : false,
+      message : error.message
+    });
+  }
+};
+
 module.exports = {
   createShipment,
   getAllShipments,
   getShipment,
   updateStatus,
-  deleteShipment
+  deleteShipment,
+  getShipmentByTracking,
+  predictDeliveryTime
 };

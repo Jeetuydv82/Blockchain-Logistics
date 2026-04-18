@@ -23,6 +23,25 @@ export const getAllShipments  = ()     => API.get('/shipments');
 export const getShipment     = (id)   => API.get(`/shipments/${id}`);
 export const updateStatus    = (id, data) => API.put(`/shipments/${id}/status`, data);
 export const deleteShipment  = (id)   => API.delete(`/shipments/${id}`);
+
+// Public tracking API (no auth required)
+export const trackShipment = (trackingNumber) => 
+  API.get(`/shipments/track/${trackingNumber}`, { 
+    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api'
+  });
+
+// Delivery prediction API
+export const predictDelivery = (id) => API.get(`/shipments/${id}/predict-delivery`);
+
+// Sensor APIs
+export const getSensorData = (shipmentId) => API.get(`/sensors/${shipmentId}`);
+export const enableTempTracking = (shipmentId, threshold) => 
+  API.put(`/sensors/${shipmentId}/enable`, { threshold });
+
+// Payment APIs
+export const lockPayment = (data) => API.post('/payments/lock', data);
+export const releasePayment = (data) => API.post('/payments/release', data);
+export const getPaymentStatus = (shipmentId) => API.get(`/payments/${shipmentId}`);
 // Document APIs
 export const uploadDocument  = (formData) => API.post('/documents/upload', formData, {
   headers: { 'Content-Type': 'multipart/form-data' }

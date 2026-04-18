@@ -1,0 +1,91 @@
+{
+  "app": {
+    "title": "اللوجستيات سلسلة الكتل",
+    "loading": "جار التحميل..."
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "register": "تسجيل",
+    "logout": "تسجيل الخروج",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "name": "الاسم الكامل",
+    "role": "الدور",
+    "loginSuccess": "تم تسجيل الدخول بنجاح!",
+    "registerSuccess": "تم التسجيل بنجاح!",
+    "loginFailed": "فشل تسجيل الدخول",
+    "registerFailed": "فشل التسجيل"
+  },
+  "roles": {
+    "admin": "المدير",
+    "supplier": "المورد",
+    "transporter": "الناقل",
+    "customer": "العميل"
+  },
+  "nav": {
+    "dashboard": "لوحة المعلومات",
+    "createShipment": "إنشاء شحنة",
+    "documents": "المستندات",
+    "scanQR": "مسح رمز QR"
+  },
+  "shipment": {
+    "title": "عنوان الشحنة",
+    "description": "الوصف",
+    "origin": "المصدر",
+    "destination": "الوجهة",
+    "status": "الحالة",
+    "trackingNumber": "رقم التتبع",
+    "create": "إنشاء شحنة",
+    "createSuccess": "تم إنشاء الشحنة بنجاح!",
+    "createFailed": "فشل إنشاء الشحنة",
+    "history": "سجل الحالة",
+    "updateStatus": "تحديث الحالة",
+    "blockchainVerified": "تم التحقق من سلسلة الكتل",
+    "track": "تتبع هذه الشحنة",
+    "qrCode": "رمز QR",
+    "downloadQR": "تنزيل رمز QR",
+    "notFound": "الشحنة غير موجودة",
+    "progress": "التقدم"
+  },
+  "status": {
+    "pending": "قيد الانتظار",
+    "picked_up": "تم استلامها",
+    "in_transit": "في الطريق",
+    "out_for_delivery": "في الطريق للتسليم",
+    "delivered": "تم التسليم",
+    "cancelled": "ملغاة"
+  },
+  "document": {
+    "upload": "رفع مستند",
+    "verify": "التحقق من المستند",
+    "filename": "اسم الملف",
+    "uploadedBy": "تم الرفع بواسطة",
+    "uploadSuccess": "تم رفع المستند بنجاح!",
+    "uploadFailed": "فشل رفع المستند"
+  },
+  "buttons": {
+    "submit": "إرسال",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "update": "تحديث",
+    "back": "رجوع",
+    "save": "حفظ"
+  },
+  "messages": {
+    "error": "خطأ",
+    "success": "نجاح",
+    "confirmDelete": "هل أنت متأكد من الحذف؟",
+    "noData": "لا تتوفر بيانات"
+  },
+  "publicTracker": {
+    "title": "تتبع الشحنة",
+    "trackingHistory": "سجل التتبع",
+    "notFound": "الشحنة غير موجودة"
+  },
+  "qrScanner": {
+    "title": "ماسح رمز QR",
+    "scanQR": "مسح رمز QR",
+    "enterManually": "أو أدخل رقم التتبع يدوياً",
+    "trackShipment": "تتبع الشحنة"
+  }
+}

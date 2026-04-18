@@ -34,6 +34,20 @@ const UserSchema = new mongoose.Schema(
     isActive: {
       type    : Boolean,
       default : true
+    },
+
+    // Notification preferences
+    emailNotifications: {
+      type    : Boolean,
+      default : true
+    },
+    smsNotifications: {
+      type    : Boolean,
+      default : false
+    },
+    phone: {
+      type    : String,
+      default : ''
     }
   },
   {

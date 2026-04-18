@@ -1,10 +1,12 @@
 // client/src/pages/ShipmentDetail.js
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getShipment, updateStatus } from '../services/api';
+import { getShipment, updateStatus, predictDelivery, getSensorData, enableTempTracking, lockPayment, releasePayment, getPaymentStatus } from '../services/api';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { QRCodeSVG } from 'qrcode.react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const ShipmentDetail = () => {
   const { id }                      = useParams();
@@ -15,9 +17,16 @@ const ShipmentDetail = () => {
   const [loading,   setLoading]     = useState(true);
   const [newStatus, setNewStatus]   = useState('');
   const [note,      setNote]        = useState('');
-  const [updating,  setUpdating]    = useState(false);
+const [updating, setUpdating] = useState(false);
+  const [showQR, setShowQR] = useState(false);
+  const [prediction, setPrediction] = useState(null);
+  const [sensorData, setSensorData] = useState(null);
+  const [sensorStats, setSensorStats] = useState(null);
+  const [paymentData, setPaymentData] = useState(null);
+  const [paymentAmount, setPaymentAmount] = useState('');
+  const [processingPayment, setProcessingPayment] = useState(false);
 
-  useEffect(() => {
+useEffect(() => {
     const fetchShipment = async () => {
       try {
         const res = await getShipment(id);
@@ -30,8 +39,41 @@ const ShipmentDetail = () => {
       }
     };
   
+    const fetchPrediction = async () => {
+      try {
+        const res = await predictDelivery(id);
+        setPrediction(res.data.prediction);
+      } catch (error) {
+        console.log('Prediction not available');
+      }
+    };
+  
+    const fetchSensorData = async () => {
+      try {
+        const res = await getSensorData(id);
+        setSensorData(res.data.sensorData);
+        setSensorStats(res.data.stats);
+      } catch (error) {
+        console.log('Sensor data not available');
+      }
+    };
+  
     fetchShipment();
+    if (id) {
+      fetchPrediction();
+      fetchSensorData();
+      refreshPaymentData();
+    }
   }, [id, navigate]);
+
+  const refreshPaymentData = async () => {
+    try {
+      const res = await getPaymentStatus(id);
+      setPaymentData(res.data.payment);
+    } catch (error) {
+      console.log('Payment data not available');
+    }
+  };
 
   const handleStatusUpdate = async () => {
     if (!newStatus) return toast.error('Please select a status');
@@ -118,6 +160,53 @@ const ShipmentDetail = () => {
             <div style={styles.routeAddress}>{shipment.destination.address}, {shipment.destination.country}</div>
           </div>
         </div>
+
+        {/* PREDICTION */}
+        {prediction && shipment.status !== 'delivered' && (
+          <div style={{
+            background  : '#eff6ff',
+            border      : '1px solid #bfdbfe',
+            borderRadius: '12px',
+            padding     : '20px',
+            marginBottom: '20px'
+          }}>
+            <h3 style={{ margin:'0 0 12px 0', color:'#1d4ed8' }}>🤖 AI Delivery Prediction</h3>
+            <div style={{ display:'flex', gap:'20px', marginBottom:'12px', flexWrap:'wrap' }}>
+              <div>
+                <div style={{ fontSize:'12px', color:'#6b7280' }}>Predicted Date</div>
+                <div style={{ fontSize:'18px', fontWeight:'bold', color:'#1e40af' }}>
+                  {new Date(prediction.predictedDelivery).toLocaleDateString()}
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize:'12px', color:'#6b7280' }}>Confidence</div>
+                <div style={{ fontSize:'18px', fontWeight:'bold', color:'#1e40af' }}>
+                  {prediction.predictionConfidence}%
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize:'12px', color:'#6b7280' }}>Est. Days Left</div>
+                <div style={{ fontSize:'18px', fontWeight:'bold', color:'#1e40af' }}>
+                  {prediction.predictedDays}
+                </div>
+              </div>
+            </div>
+            <div style={{ marginBottom:'10px' }}>
+              <div style={{ fontSize:'12px', color:'#6b7280', marginBottom:'4px' }}>Progress</div>
+              <div style={{ height:'8px', background:'#dbeafe', borderRadius:'4px', overflow:'hidden' }}>
+                <div style={{
+                  height:'100%',
+                  background:'#3b82f6',
+                  width: `${prediction.currentProgress}%`,
+                  borderRadius:'4px'
+                }} />
+              </div>
+            </div>
+            <p style={{ fontSize:'13px', color:'#6b7280', margin:0 }}>
+              {prediction.message}
+            </p>
+          </div>
+        )}
         {/* BLOCKCHAIN INFO */}
         {shipment.blockchainTxHash && (
           <div style={{
@@ -148,6 +237,50 @@ const ShipmentDetail = () => {
             </div>
           </div>
         )}
+
+        {/* QR CODE */}
+        <div style={{
+          background  : colors.borderLight,
+          borderRadius: '12px',
+          padding     : '20px',
+          marginBottom: '20px',
+          textAlign: 'center'
+        }}>
+          <h3 style={{ margin:'0 0 15px 0', color:colors.text }}>📱 Track This Shipment</h3>
+<div style={{ display:'flex', justifyContent:'center', marginBottom:'15px' }}>
+            <QRCodeSVG
+              value={`http://10.2.115.60:3000/track/${shipment.trackingNumber}`}
+              size={150}
+              level="H"
+              includeMargin
+            />
+          </div>
+          <p style={{ fontSize:'13px', color:colors.textSecondary, marginBottom:'10px' }}>
+            Full URL: <code style={{ background:colors.badge, padding:'2px 6px', borderRadius:'4px', wordBreak:'break-all' }}>
+              {typeof window !== 'undefined' ? window.location?.origin : 'http://localhost:3000'}/track/{shipment.trackingNumber}
+            </code>
+          </p>
+          <button
+            style={{
+              padding:'8px 16px',
+              background:colors.primary,
+              color:'white',
+              border:'none',
+              borderRadius:'8px',
+              cursor:'pointer',
+              fontSize:'13px'
+            }}
+            onClick={() => setShowQR(!showQR)}
+          >
+            {showQR ? 'Hide' : 'Show'} Full URL
+          </button>
+          {showQR && (
+            <div style={{ marginTop:'10px', wordBreak:'break-all', fontSize:'11px', color:colors.textSecondary }}>
+              {window.location.origin}/track/{shipment.trackingNumber}
+            </div>
+)}
+        </div>
+
         {/* UPDATE STATUS */}
         {(user?.role === 'admin' || user?.role === 'transporter') && (
           <div style={styles.updateCard}>

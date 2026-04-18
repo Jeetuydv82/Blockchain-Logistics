@@ -4,12 +4,15 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { getAllShipments } from '../services/api';
 import { toast } from 'react-toastify';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const Dashboard = () => {
   const { user, logout }       = useAuth();
   const { colors, toggleTheme, darkMode } = useTheme();
+  const { t } = useTranslation();
   const navigate               = useNavigate();
   const [shipments, setShipments] = useState([]);
   const [loading,   setLoading]   = useState(true);
@@ -79,8 +82,9 @@ const Dashboard = () => {
       {/* HEADER */}
       <div style={styles.header}>
         <h1 style={styles.logo}>📦 Blockchain Logistics</h1>
-        <div style={styles.headerRight}>
-        <button style={styles.themeToggle} onClick={toggleTheme}>
+<div style={styles.headerRight}>
+          <LanguageSwitcher />
+          <button style={styles.themeToggle} onClick={toggleTheme}>
             {darkMode ? '☀️ Light' : '🌙 Dark'}
           </button>
 
