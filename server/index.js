@@ -19,10 +19,7 @@ connectDB();
 const app = express();
 
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://blockchain-logistics-4yw7.vercel.app'
-  ],
+  origin: process.env.CLIENT_URL || '*',
   credentials: true
 }));
 app.use(express.json());
