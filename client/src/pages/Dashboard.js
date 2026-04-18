@@ -51,20 +51,20 @@ const Dashboard = () => {
 
   const styles = {
     container   : { padding:'20px', background:colors.background, minHeight:'100vh' },
-    header      : { display:'flex', justifyContent:'space-between', alignItems:'center', background:colors.card, padding:'15px 25px', borderRadius:'12px', marginBottom:'20px', boxShadow:'0 2px 8px rgba(0,0,0,0.08)' },
+    header      : { display:'flex', justifyContent:'space-between', alignItems:'center', background:colors.card, padding:'15px 25px', borderRadius:'12px', marginBottom:'20px', boxShadow:'0 2px 8px rgba(0,0,0,0.08)', flexWrap:'wrap', gap:'12px' },
     logo        : { margin:0, color:colors.primary, fontSize:'22px' },
-    headerRight : { display:'flex', alignItems:'center', gap:'12px' },
+    headerRight : { display:'flex', alignItems:'center', gap:'12px', flexWrap:'wrap', justifyContent:'flex-end' },
     userInfo    : { color:colors.textSecondary, fontSize:'14px' },
     newBtn      : { padding:'8px 18px', background:colors.primary, color:'white', border:'none', borderRadius:'8px', cursor:'pointer', fontWeight:'bold' },
     logoutBtn   : { padding:'8px 18px', background:colors.danger, color:'white', border:'none', borderRadius:'8px', cursor:'pointer' },
     themeToggle : { padding:'8px 14px', background:colors.border, color:colors.text, border:'none', borderRadius:'8px', cursor:'pointer', fontSize:'14px', fontWeight:'600' },
-    statsRow    : { display:'flex', gap:'15px', marginBottom:'20px' },
-    statCard    : { background:colors.card, padding:'20px 25px', borderRadius:'12px', flex:1, textAlign:'center', boxShadow:'0 2px 8px rgba(0,0,0,0.08)' },
+    statsRow    : { display:'flex', gap:'15px', marginBottom:'20px', flexWrap:'wrap' },
+    statCard    : { background:colors.card, padding:'20px 25px', borderRadius:'12px', flex:1, textAlign:'center', boxShadow:'0 2px 8px rgba(0,0,0,0.08)', minWidth:'140px' },
     statNumber  : { fontSize:'32px', fontWeight:'bold', color:colors.primary },
     statLabel   : { color:colors.textMuted, fontSize:'14px', marginTop:'4px' },
-    tableCard   : { background:colors.card, borderRadius:'12px', padding:'25px', boxShadow:'0 2px 8px rgba(0,0,0,0.08)' },
+    tableCard   : { background:colors.card, borderRadius:'12px', padding:'25px', boxShadow:'0 2px 8px rgba(0,0,0,0.08)', overflowX:'auto' },
     tableTitle  : { margin:'0 0 20px 0', color:colors.text },
-    table       : { width:'100%', borderCollapse:'collapse' },
+    table       : { width:'100%', borderCollapse:'collapse', minWidth:'600px' },
     tableHeader : { background:colors.borderLight },
     th          : { padding:'12px 15px', textAlign:'left', fontSize:'13px', color:colors.textSecondary, fontWeight:'600', borderBottom:`2px solid ${colors.border}` },
     tableRow    : { borderBottom:`1px solid ${colors.borderLight}` },
@@ -164,52 +164,87 @@ const Dashboard = () => {
         ) : shipments.length === 0 ? (
           <p style={styles.empty}>No shipments found. Create your first one!</p>
         ) : (
-          <table style={styles.table}>
-            <thead>
-              <tr style={styles.tableHeader}>
-                <th style={styles.th}>Tracking #</th>
-                <th style={styles.th}>Title</th>
-                <th style={styles.th}>From → To</th>
-                <th style={styles.th}>Status</th>
-                <th style={styles.th}>Date</th>
-                <th style={styles.th}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
+          <>
+            {/* Desktop Table */}
+            <table style={styles.table} className="shipments-table">
+              <thead>
+                <tr style={styles.tableHeader}>
+                  <th style={styles.th}>Tracking #</th>
+                  <th style={styles.th}>Title</th>
+                  <th style={styles.th}>From → To</th>
+                  <th style={styles.th}>Status</th>
+                  <th style={styles.th}>Date</th>
+                  <th style={styles.th}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {shipments.map(shipment => (
+                  <tr key={shipment._id} style={styles.tableRow}>
+                    <td style={styles.td}>
+                      <code style={styles.tracking}>
+                        {shipment.trackingNumber}
+                      </code>
+                    </td>
+                    <td style={styles.td}>{shipment.title}</td>
+                    <td style={styles.td}>
+                      {shipment.origin.city} → {shipment.destination.city}
+                    </td>
+                    <td style={styles.td}>
+                      <span style={{
+                        ...styles.badge,
+                        background: getStatusColor(shipment.status)
+                      }}>
+                        {shipment.status.replace('_', ' ').toUpperCase()}
+                      </span>
+                    </td>
+                    <td style={styles.td}>
+                      {new Date(shipment.createdAt).toLocaleDateString()}
+                    </td>
+                    <td style={styles.td}>
+                      <button
+                        style={styles.viewBtn}
+                        onClick={() => navigate(`/shipments/${shipment._id}`)}
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Mobile Cards */}
+            <div className="shipments-cards">
               {shipments.map(shipment => (
-                <tr key={shipment._id} style={styles.tableRow}>
-                  <td style={styles.td}>
-                    <code style={styles.tracking}>
-                      {shipment.trackingNumber}
-                    </code>
-                  </td>
-                  <td style={styles.td}>{shipment.title}</td>
-                  <td style={styles.td}>
-                    {shipment.origin.city} → {shipment.destination.city}
-                  </td>
-                  <td style={styles.td}>
+                <div key={shipment._id} className="shipment-card">
+                  <div className="shipment-card-header">
+                    <code style={styles.tracking}>{shipment.trackingNumber}</code>
                     <span style={{
                       ...styles.badge,
                       background: getStatusColor(shipment.status)
                     }}>
                       {shipment.status.replace('_', ' ').toUpperCase()}
                     </span>
-                  </td>
-                  <td style={styles.td}>
-                    {new Date(shipment.createdAt).toLocaleDateString()}
-                  </td>
-                  <td style={styles.td}>
-                    <button
-                      style={styles.viewBtn}
-                      onClick={() => navigate(`/shipments/${shipment._id}`)}
-                    >
-                      View
-                    </button>
-                  </td>
-                </tr>
+                  </div>
+                  <div className="shipment-card-row">
+                    <span className="shipment-card-label">Title</span>
+                    <span className="shipment-card-value">{shipment.title}</span>
+                  </div>
+                  <div className="shipment-card-row">
+                    <span className="shipment-card-label">Route</span>
+                    <span className="shipment-card-value">{shipment.origin.city} → {shipment.destination.city}</span>
+                  </div>
+                  <div className="shipment-card-row">
+                    <span className="shipment-card-label">Date</span>
+                    <span className="shipment-card-value">{new Date(shipment.createdAt).toLocaleDateString()}</span>
+                  </div>
+                  <div className="shipment-card-actions">
+                    <button onClick={() => navigate(`/shipments/${shipment._id}`)}>View Details</button>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
     </div>

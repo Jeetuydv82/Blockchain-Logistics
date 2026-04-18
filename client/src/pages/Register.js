@@ -33,12 +33,12 @@ const Register = () => {
   };
 
   const styles = {
-    container : { display:'flex', justifyContent:'center', alignItems:'center', height:'100vh', background:colors.background },
-    card      : { background:colors.card, padding:'40px', borderRadius:'12px', width:'380px', boxShadow:'0 4px 20px rgba(0,0,0,0.1)' },
+    container : { display:'flex', justifyContent:'center', alignItems:'center', minHeight:'100vh', background:colors.background, padding:'20px' },
+    card      : { background:colors.card, padding:'40px', borderRadius:'12px', width:'100%', maxWidth:'380px', boxShadow:'0 4px 20px rgba(0,0,0,0.1)' },
     title     : { textAlign:'center', marginBottom:'5px', color:colors.text },
     subtitle  : { textAlign:'center', color:colors.textSecondary, marginBottom:'25px' },
-    input     : { width:'100%', padding:'12px', margin:'8px 0', borderRadius:'8px', border:`1px solid ${colors.inputBorder}`, boxSizing:'border-box', fontSize:'14px', background:colors.inputBg, color:colors.text },
-    button    : { width:'100%', padding:'12px', background:colors.primary, color:'white', border:'none', borderRadius:'8px', fontSize:'16px', cursor:'pointer', marginTop:'10px' },
+    input     : { width:'100%', padding:'12px', margin:'8px 0', borderRadius:'8px', border:`1px solid ${colors.inputBorder}`, boxSizing:'border-box', fontSize:'16px', background:colors.inputBg, color:colors.text },
+    button    : { width:'100%', padding:'14px', background:colors.primary, color:'white', border:'none', borderRadius:'8px', fontSize:'16px', cursor:'pointer', marginTop:'10px' },
     link      : { textAlign:'center', marginTop:'15px', fontSize:'14px', color:colors.textSecondary }
   };
 
