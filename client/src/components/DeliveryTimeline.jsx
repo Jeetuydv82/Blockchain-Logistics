@@ -88,6 +88,10 @@ const DeliveryTimeline = ({ history = [] }) => {
                   <p className="text-[14px] text-white/70 font-medium">{step.location}</p>
                 )}
 
+                {step.note && (
+                  <p className="text-[13px] text-white/50 italic bg-white/5 p-2 rounded border-l-2 border-primary/40">{step.note}</p>
+                )}
+
                 {step.blockchainTxHash && (
                   <div className="flex items-center gap-2 mt-2 group">
                     <div className="px-3 py-1.5 bg-white/5 rounded-lg border border-white/10 flex items-center gap-3">

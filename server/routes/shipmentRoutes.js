@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { 
   createShipment, getShipments, getShipmentById, 
-  trackShipment, assignTransporter, updateStatus 
+  trackShipment, assignTransporter, updateStatus, updateTransporter, updateShipment 
 } = require('../controllers/shipmentController');
 const { protect, authorize } = require('../middleware/auth');
 
@@ -25,9 +25,11 @@ router.get('/track/:trackingId', async (req, res) => {
 })
 
 router.route('/:id')
-  .get(protect, getShipmentById);
+  .get(protect, getShipmentById)
+  .put(protect, authorize('admin', 'supplier'), updateShipment);
 
 router.patch('/:id/assign', protect, authorize('admin'), assignTransporter);
 router.patch('/:id/status', protect, authorize('admin', 'transporter'), updateStatus);
+router.patch('/:id/transporter', protect, authorize('admin'), updateTransporter);
 
 module.exports = router;

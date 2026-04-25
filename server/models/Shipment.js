@@ -5,7 +5,8 @@ const statusHistorySchema = new mongoose.Schema({
   updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   timestamp: { type: Date, default: Date.now },
   blockchainTxHash: String,
-  location: String
+  location: String,
+  note: String
 });
 
 const shipmentSchema = new mongoose.Schema({
@@ -29,6 +30,7 @@ const shipmentSchema = new mongoose.Schema({
   receiverName: String,
   receiverPhone: String,
   receiverAddress: String,
+  vehicleNumber: String,
   blockchainShipmentId: Number
 }, { timestamps: true });
 
