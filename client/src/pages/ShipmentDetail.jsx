@@ -8,13 +8,15 @@ import StatusBadge from '../components/StatusBadge';
 import DeliveryTimeline from '../components/DeliveryTimeline';
 import SkeletonLoader from '../components/SkeletonLoader';
 import { useAuth } from '../context/AuthContext';
-import { ArrowLeft, Box, Copy, ExternalLink, MapPin, Truck, Phone, User, Calendar, Pencil, X, Check } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
+import { ArrowLeft, Box, Copy, MapPin, Truck, Phone, User, Calendar, Pencil, Check, Loader2 } from 'lucide-react';
 import copyToClipboard from '../utils/clipboard';
 
 const ShipmentDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { darkMode } = useTheme();
   const [shipment, setShipment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
@@ -76,19 +78,20 @@ const ShipmentDetail = () => {
 
   const handleUpdateStatus = async () => {
     if (!newStatus) return toast.error("Please select a status");
-    if (!location) return toast.error("Please enter current location");
     setUpdating(true);
     
     try {
       await api.patch(`/shipments/${id}/status`, {
         status: newStatus,
-        location: location || 'Warehouse',
+        location: location || 'Location update',
         note: statusNote
       });
       
-      toast.success(`Status updated to ${newStatus.replace('_', ' ')} successfully!`);
+      const statusDisplay = newStatus.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+      toast.success(`Status updated to ${statusDisplay} successfully!`);
       setStatusNote('');
       setLocation('');
+      setNewStatus('');
       fetchShipment();
     } catch (error) {
       console.error(error);
@@ -146,12 +149,12 @@ const ShipmentDetail = () => {
     setEditingTransporter(true);
   };
 
-  if (loading) return <div className="p-8 max-w-4xl mx-auto"><SkeletonLoader /></div>;
-  if (!shipment) return <div className="text-center text-white mt-20">Shipment not found</div>;
+  if (loading) return <div className="min-h-screen relative"><div className={darkMode ? "dark-bg" : "light-bg"} /><div className="p-8 max-w-4xl mx-auto pt-24"><SkeletonLoader /></div></div>;
+  if (!shipment) return <div className="min-h-screen relative flex items-center justify-center"><div className={darkMode ? "dark-bg" : "light-bg"} /><div className="text-center" style={{ color: darkMode ? '#fff' : '#1e293b' }}>Shipment not found</div></div>;
 
   return (
-    <div className="max-w-5xl mx-auto px-6 pt-24 pb-8 relative">
-      <div className="bg-orb bg-orb-3" />
+    <div className={`min-h-screen relative ${darkMode ? 'dark' : 'light'}`}>
+      <div className={darkMode ? "dark-bg" : "light-bg"} />
       
       <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-white/50 hover:text-white mb-6 relative z-10">
         <ArrowLeft className="w-4 h-4" /> Back to Shipments
@@ -559,7 +562,11 @@ const ShipmentDetail = () => {
                     onClick={handleUpdateStatus}
                     className="w-full mt-2"
                   >
-                    {updating ? 'Confirming...' : 'Confirm Status Update'}
+                    {updating ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <Loader2 className="w-4 h-4 animate-spin" /> Updating...
+                      </span>
+                    ) : 'Confirm Status Update'}
                   </MagneticButton>
                 </div>
               )}

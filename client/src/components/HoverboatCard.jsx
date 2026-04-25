@@ -1,24 +1,30 @@
+import { useRef } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
-const GlassCard = ({ 
-  children, 
-  className = '', 
-  glow = false,
+const HoverboatCard = ({
+  children,
+  className = '',
+  floatEnabled = true,
+  tiltEnabled = false,
+  glowIntensity = 1,
+  delay = 0,
   onMouseDown
 }) => {
+  const cardRef = useRef(null);
   const prefersReducedMotion = useReducedMotion();
-  
+
   return (
     <motion.div
-      initial={prefersReducedMotion ? {} : { opacity: 0, y: 30, scale: 0.95 }}
+      ref={cardRef}
+      initial={{ opacity: 0, y: 30, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ 
-        duration: 0.6, 
-        ease: [0.25, 0.46, 0.45, 0.94] 
-      }}
+      transition={{ delay, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
       whileHover={!prefersReducedMotion ? {
-        y: -4,
-        scale: 1.01,
+        y: -8,
+        scale: 1.02,
+        backgroundColor: 'rgba(139, 92, 246, 0.15)',
+        boxShadow: '0 20px 60px rgba(139, 92, 246, 0.3)',
+        borderColor: 'rgba(139, 92, 246, 0.4)',
       } : {}}
       onMouseDown={onMouseDown}
       style={{
@@ -27,17 +33,15 @@ const GlassCard = ({
         WebkitBackdropFilter: 'blur(20px) saturate(180%)',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         borderRadius: '20px',
-        boxShadow: glow 
-          ? '0 0 30px rgba(139, 92, 246, 0.2), 0 8px 32px rgba(0, 0, 0, 0.4)'
-          : '0 8px 32px rgba(0, 0, 0, 0.4)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
         willChange: 'transform',
         transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
       }}
-      className={`p-6 liquid-glass-card ${className}`}
+      className={`liquid-glass-card ${className}`}
     >
       {children}
     </motion.div>
   );
 };
 
-export default GlassCard;
+export default HoverboatCard;

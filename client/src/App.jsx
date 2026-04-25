@@ -4,7 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 
 import Landing from './pages/Landing';
 import Login from './pages/Login';
@@ -30,8 +30,9 @@ const ProtectedRoute = ({ children, roles }) => {
 
 const AppContent = () => {
   const { user } = useAuth();
+  const { darkMode } = useTheme();
   return (
-    <div className="app-container">
+    <div className={`app-container ${!darkMode ? 'light' : ''}`}>
       {user && <GlassNavbar />}
       <Routes>
         <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Landing />} />
