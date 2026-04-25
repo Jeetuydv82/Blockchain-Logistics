@@ -5,12 +5,9 @@ import api from '../services/api';
 import GlassCard from '../components/GlassCard';
 import MagneticButton from '../components/MagneticButton';
 import { Package, MapPin, DollarSign, Weight, ArrowLeft } from 'lucide-react';
-import { useWallet } from '../context/WalletContext';
-import ShipmentTrackingABI from '../abis/ShipmentTracking.json';
 
 const CreateShipment = () => {
   const navigate = useNavigate();
-  const { getContract, account } = useWallet();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '', description: '', origin: '', destination: '',
@@ -21,20 +18,10 @@ const CreateShipment = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(!account) return toast.error("Please connect your wallet first");
     setLoading(true);
-    
     try {
-      // 1. Save to DB first to get tracking ID
-      const res = await api.post('/shipments', formData);
-      const trackingId = res.data.trackingId;
-
-      // 2. Save to Blockchain
-      const contract = getContract(process.env.REACT_APP_CONTRACT_ADDRESS || '0x5FbDB2315678afecb367f032d93F642f64180aa3', ShipmentTrackingABI.abi);
-      const tx = await contract.createShipment(trackingId);
-      await tx.wait(); // Wait for confirmation
-      
-      toast.success('Shipment created and secured on blockchain!');
+      await api.post('/shipments', formData);
+      toast.success('Shipment created successfully!');
       navigate('/shipments');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to create shipment');
@@ -99,9 +86,8 @@ const CreateShipment = () => {
 
           <div className="pt-6">
             <MagneticButton variant="primary" type="submit" disabled={loading} className="w-full !py-4 text-lg">
-              {loading ? 'Processing & Securing...' : 'Create & Secure on Blockchain'}
+              {loading ? 'Creating Shipment...' : 'Create Shipment'}
             </MagneticButton>
-            <p className="text-center text-white/30 text-xs mt-3">This action requires a MetaMask signature</p>
           </div>
         </form>
       </GlassCard>

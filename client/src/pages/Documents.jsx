@@ -3,8 +3,6 @@ import { toast } from 'react-toastify';
 import api from '../services/api';
 import GlassCard from '../components/GlassCard';
 import MagneticButton from '../components/MagneticButton';
-import { useWallet } from '../context/WalletContext';
-import DocumentVerificationABI from '../abis/DocumentVerification.json';
 import { Upload, FileText, CheckCircle, Search, Hash } from 'lucide-react';
 
 const Documents = () => {
@@ -17,7 +15,6 @@ const Documents = () => {
   
   const uploadRef = useRef();
   const verifyRef = useRef();
-  const { getContract, account } = useWallet();
 
   const fetchDocuments = async () => {
     try {
@@ -33,32 +30,18 @@ const Documents = () => {
   const handleUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (!account) return toast.error("Connect wallet first");
     
     setUploading(true);
     try {
-      // 1. Get Hash using Crypto API in browser for preview (backend does it too)
-      const buffer = await file.arrayBuffer();
-      const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const fileHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-
-      // 2. Write to Blockchain
-      const contract = getContract(process.env.REACT_APP_DOC_CONTRACT_ADDRESS || '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512', DocumentVerificationABI.abi);
-      const tx = await contract.uploadDocument(fileHash);
-      await tx.wait();
-
-      // 3. Save to DB
       const formData = new FormData();
       formData.append('document', file);
       if (shipmentId) formData.append('shipmentId', shipmentId);
-      formData.append('blockchainTxHash', tx.hash);
 
       await api.post('/documents/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      toast.success('Document uploaded and hashed on blockchain!');
+      toast.success('Document uploaded to registry!');
       fetchDocuments();
     } catch (error) {
       toast.error(error.message || 'Upload failed');
@@ -103,15 +86,15 @@ const Documents = () => {
       
       <div className="mb-8 relative z-10">
         <h1 className="text-3xl font-bold text-white mb-2">Documents</h1>
-        <p className="text-white/50">Blockchain verified document management</p>
+        <p className="text-white/50">Secure document management system</p>
       </div>
 
       <div className="flex gap-4 mb-8 relative z-10">
         <MagneticButton variant={activeTab === 'upload' ? 'primary' : 'secondary'} onClick={() => setActiveTab('upload')}>
-          Upload & Record
+          Upload Document
         </MagneticButton>
         <MagneticButton variant={activeTab === 'verify' ? 'primary' : 'secondary'} onClick={() => setActiveTab('verify')}>
-          Verify Document
+          Verify Integrity
         </MagneticButton>
       </div>
 
@@ -128,7 +111,7 @@ const Documents = () => {
                 >
                   <Upload className="w-8 h-8 text-primary mx-auto mb-2" />
                   <p className="text-white text-sm font-medium">Click to select file</p>
-                  <p className="text-white/40 text-xs mt-1">Hashes and records on chain</p>
+                  <p className="text-white/40 text-xs mt-1">Stored securely in registry</p>
                 </div>
                 <input type="file" ref={uploadRef} onChange={handleUpload} className="hidden" />
                 {uploading && <p className="text-primary text-sm text-center mt-4">Processing & Securing...</p>}
@@ -142,7 +125,7 @@ const Documents = () => {
                 >
                   <Search className="w-8 h-8 text-secondary mx-auto mb-2" />
                   <p className="text-white text-sm font-medium">Select file to verify</p>
-                  <p className="text-white/40 text-xs mt-1">Checks against blockchain hash</p>
+                  <p className="text-white/40 text-xs mt-1">Checks against stored hash</p>
                 </div>
                 <input type="file" ref={verifyRef} onChange={handleVerify} className="hidden" />
                 {verifying && <p className="text-secondary text-sm text-center mt-4">Verifying hash...</p>}
@@ -175,7 +158,7 @@ const Documents = () => {
                   <tr className="text-white/40 border-b border-white/10">
                     <th className="pb-3 font-medium">Name</th>
                     <th className="pb-3 font-medium">Size</th>
-                    <th className="pb-3 font-medium">Blockchain Tx</th>
+                    <th className="pb-3 font-medium">Status</th>
                     <th className="pb-3 font-medium">Date</th>
                   </tr>
                 </thead>
@@ -187,11 +170,7 @@ const Documents = () => {
                       </td>
                       <td className="py-4 text-white/50">{(doc.fileSize / 1024).toFixed(1)} KB</td>
                       <td className="py-4">
-                        {doc.blockchainTxHash ? (
-                          <span className="text-success text-xs font-mono">{doc.blockchainTxHash.substring(0, 15)}...</span>
-                        ) : (
-                          <span className="text-warning text-xs">Pending</span>
-                        )}
+                        <span className="text-success text-xs">Verified</span>
                       </td>
                       <td className="py-4 text-white/50">{new Date(doc.createdAt).toLocaleDateString()}</td>
                     </tr>

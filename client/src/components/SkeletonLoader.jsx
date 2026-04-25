@@ -1,36 +1,46 @@
-import { motion } from 'framer-motion';
+import React from 'react';
 
-const SkeletonLoader = ({ type = 'card' }) => {
-  if (type === 'card') {
+const SkeletonLoader = ({ variant = 'card', className = '' }) => {
+  const baseClass = "shimmer relative overflow-hidden bg-[rgba(255,255,255,0.05)] rounded-xl";
+  
+  if (variant === 'card') {
     return (
-      <div className="glass-card p-6 animate-pulse">
-        <div className="flex justify-between items-start mb-4">
-          <div>
-            <div className="h-4 w-24 bg-white/10 rounded mb-2"></div>
-            <div className="h-6 w-48 bg-white/10 rounded"></div>
-          </div>
-          <div className="h-6 w-20 bg-white/10 rounded-full"></div>
+      <div className={`glass-card p-6 space-y-4 ${className}`}>
+        <div className="flex justify-between items-center">
+          <div className={`${baseClass} h-6 w-1/3`} />
+          <div className={`${baseClass} h-6 w-20 rounded-full`} />
         </div>
-        <div className="space-y-3 mb-6">
-          <div className="h-4 w-full bg-white/10 rounded"></div>
-          <div className="h-4 w-3/4 bg-white/10 rounded"></div>
+        <div className="space-y-2">
+          <div className={`${baseClass} h-4 w-full`} />
+          <div className={`${baseClass} h-4 w-3/4`} />
         </div>
-        <div className="h-10 w-full bg-white/10 rounded-lg"></div>
+        <div className={`${baseClass} h-10 w-full mt-4`} />
       </div>
     );
   }
 
-  return (
-    <div className="animate-pulse flex space-x-4">
-      <div className="flex-1 space-y-4 py-1">
-        <div className="h-4 bg-white/10 rounded w-3/4"></div>
-        <div className="space-y-2">
-          <div className="h-4 bg-white/10 rounded"></div>
-          <div className="h-4 bg-white/10 rounded w-5/6"></div>
+  if (variant === 'row') {
+    return (
+      <div className={`flex items-center gap-4 py-3 ${className}`}>
+        <div className={`${baseClass} h-10 w-10 shrink-0 rounded-lg`} />
+        <div className="flex-1 space-y-2">
+          <div className={`${baseClass} h-4 w-1/4`} />
+          <div className={`${baseClass} h-3 w-1/2`} />
         </div>
+        <div className={`${baseClass} h-6 w-16 rounded-full`} />
       </div>
-    </div>
-  );
+    );
+  }
+
+  if (variant === 'avatar') {
+    return <div className={`${baseClass} h-12 w-12 rounded-full ${className}`} />;
+  }
+
+  if (variant === 'text') {
+    return <div className={`${baseClass} h-4 w-full ${className}`} />;
+  }
+
+  return <div className={`${baseClass} ${className}`} />;
 };
 
 export default SkeletonLoader;

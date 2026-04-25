@@ -9,7 +9,7 @@ const statusHistorySchema = new mongoose.Schema({
 });
 
 const shipmentSchema = new mongoose.Schema({
-  trackingId: { type: String, required: true, unique: true },
+  trackingId: { type: String, unique: true, sparse: true },
   title: { type: String, required: true },
   description: String,
   origin: String,

@@ -1,10 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { WalletProvider } from './context/WalletContext';
 import { ThemeProvider } from './context/ThemeContext';
 
 import Landing from './pages/Landing';
@@ -18,6 +17,8 @@ import Documents from './pages/Documents';
 import AdminPanel from './pages/AdminPanel';
 import TrackOrder from './pages/TrackOrder';
 import GlassNavbar from './components/GlassNavbar';
+
+window.__toast = toast;
 
 const ProtectedRoute = ({ children, roles }) => {
   const { user, loading } = useAuth();
@@ -52,13 +53,11 @@ const AppContent = () => {
 
 const App = () => (
   <AuthProvider>
-    <WalletProvider>
-      <ThemeProvider>
-        <BrowserRouter>
-          <AppContent />
-        </BrowserRouter>
-      </ThemeProvider>
-    </WalletProvider>
+    <ThemeProvider>
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
+    </ThemeProvider>
   </AuthProvider>
 );
 

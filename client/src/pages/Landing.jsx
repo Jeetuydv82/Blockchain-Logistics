@@ -6,7 +6,7 @@ import GlassCard from '../components/GlassCard';
 import { Package, Search, Truck, Shield, Clock } from 'lucide-react';
 
 const features = [
-  { icon: Shield, title: 'Tamper-Proof', desc: 'Every update secured on blockchain' },
+  { icon: Shield, title: 'Tamper-Proof', desc: 'Secure immutable record of all updates' },
   { icon: Clock, title: 'Real-Time Tracking', desc: 'Live status at every step' },
   { icon: Truck, title: 'Verified Logistics', desc: 'Trusted carrier network' },
 ];
@@ -42,11 +42,11 @@ const Landing = () => {
           </motion.div>
 
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="text-5xl md:text-6xl font-bold text-white mb-4">
-            BlockLogistics
+            ShipChain
           </motion.h1>
           
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="text-xl text-white/50 mb-12">
-            Enterprise Supply Chain on Blockchain
+            Enterprise Supply Chain Management & Tracking
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="mb-16">

@@ -3,6 +3,7 @@ import api from '../services/api';
 import GlassCard from '../components/GlassCard';
 import MagneticButton from '../components/MagneticButton';
 import SkeletonLoader from '../components/SkeletonLoader';
+import StatusBadge from '../components/StatusBadge';
 import { Users, Truck, Package, Activity, Shield } from 'lucide-react';
 import { toast } from 'react-toastify';
 
@@ -92,6 +93,54 @@ const AdminPanel = () => {
         </GlassCard>
       </div>
 
+      {/* All Shipments Table */}
+      <GlassCard className="p-6 mb-8 relative z-10" hover={false}>
+        <h3 className="text-xl font-bold text-white mb-6 border-b border-white/10 pb-2">All Shipments</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b border-white/10">
+                <th style={{ padding:'10px 12px', color:'rgba(255,255,255,0.5)', fontWeight:500, fontSize:'12px' }}>Tracking ID</th>
+                <th style={{ padding:'10px 12px', color:'rgba(255,255,255,0.5)', fontWeight:500, fontSize:'12px' }}>Title</th>
+                <th style={{ padding:'10px 12px', color:'rgba(255,255,255,0.5)', fontWeight:500, fontSize:'12px' }}>Origin</th>
+                <th style={{ padding:'10px 12px', color:'rgba(255,255,255,0.5)', fontWeight:500, fontSize:'12px' }}>Destination</th>
+                <th style={{ padding:'10px 12px', color:'rgba(255,255,255,0.5)', fontWeight:500, fontSize:'12px' }}>Status</th>
+                <th style={{ padding:'10px 12px', color:'rgba(255,255,255,0.5)', fontWeight:500, fontSize:'12px' }}>Created</th>
+              </tr>
+            </thead>
+            <tbody>
+              {shipments.map(shipment => (
+                <tr key={shipment._id} className="border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer">
+                  <td style={{ padding:'10px 12px', fontFamily:'monospace', fontSize:'11px', color:'rgba(255,255,255,0.45)' }}>
+                    {shipment.trackingId || '—'}
+                  </td>
+                  <td style={{ padding:'10px 12px', fontSize:'13px', color:'rgba(255,255,255,0.8)', fontWeight:500 }}>
+                    {shipment.title}
+                  </td>
+                  <td style={{ padding:'10px 12px', fontSize:'12px', color:'rgba(255,255,255,0.5)' }}>
+                    {shipment.origin || '—'}
+                  </td>
+                  <td style={{ padding:'10px 12px', fontSize:'12px', color:'rgba(255,255,255,0.5)' }}>
+                    {shipment.destination || '—'}
+                  </td>
+                  <td style={{ padding:'10px 12px' }}>
+                    <StatusBadge status={shipment.status} />
+                  </td>
+                  <td style={{ padding:'10px 12px', fontSize:'12px', color:'rgba(255,255,255,0.4)' }}>
+                    {new Date(shipment.createdAt).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+              {shipments.length === 0 && (
+                <tr>
+                  <td colSpan="6" className="text-center text-white/40 py-8">No shipments found.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </GlassCard>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
         <div className="lg:col-span-2 space-y-6">
           <GlassCard className="p-6" hover={false}>
@@ -101,7 +150,7 @@ const AdminPanel = () => {
                 <div key={shipment._id} className="p-4 bg-white/5 rounded-xl border border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
                   <div>
                     <p className="text-white font-medium">{shipment.title}</p>
-                    <p className="text-white/40 text-xs font-mono">{shipment.trackingId}</p>
+                    <p className="text-white/40 text-xs font-mono">{shipment.trackingId || '—'}</p>
                   </div>
                   <div className="flex gap-2 w-full md:w-auto">
                     <select 

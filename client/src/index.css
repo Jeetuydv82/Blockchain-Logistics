@@ -18,142 +18,78 @@
   --liquid-gradient: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
 }
 
-body {
-  font-family: 'Inter', 'Outfit', sans-serif;
-  background: #060810;
-  color: var(--text-primary);
-  overflow-x: hidden;
-  margin: 0;
+@layer base {
+  body {
+    @apply bg-[#060810] text-[#F5F5F7] font-sans overflow-x-hidden;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
 }
 
-/* Liquid Background Orbs */
-.bg-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(140px);
-  opacity: 0.2;
-  mix-blend-mode: screen;
-  pointer-events: none;
-  z-index: -1;
+@layer components {
+  .glass-card {
+    @apply bg-[rgba(255,255,255,0.04)] backdrop-blur-[24px] border border-[rgba(255,255,255,0.08)] rounded-[24px];
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite;
+  }
 }
 
-.bg-orb-1 { width: 600px; height: 600px; background: var(--primary); top: -10%; left: -10%; animation: liquid-float 20s infinite alternate; }
-.bg-orb-2 { width: 500px; height: 500px; background: var(--accent); bottom: -5%; right: -5%; animation: liquid-float 25s infinite alternate-reverse; }
-.bg-orb-3 { width: 450px; height: 450px; background: var(--secondary); top: 40%; right: 25%; animation: liquid-float 18s infinite alternate; }
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes pulse-purple {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(191, 90, 242, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(191, 90, 242, 0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { border-color: rgba(255, 255, 255, 0.1); }
+  50% { border-color: rgba(94, 92, 230, 0.4); }
+}
 
 @keyframes liquid-float {
   0% { transform: translate(0, 0) scale(1); }
   100% { transform: translate(5%, 10%) scale(1.1); }
 }
 
-/* Enhanced Liquid Glass Card */
-.glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid var(--glass-border);
-  border-radius: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 1px 1px 0 rgba(255, 255, 255, 0.05) inset;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.bg-orb {
+  @apply absolute rounded-full blur-[140px] opacity-20 pointer-events-none -z-10 mix-blend-screen;
 }
 
-.glass-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  border-color: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(94, 92, 230, 0.15);
-}
+.bg-orb-1 { width: 600px; height: 600px; @apply bg-[#5E5CE6] -top-[10%] -left-[10%]; animation: liquid-float 20s infinite alternate; }
+.bg-orb-2 { width: 500px; height: 500px; @apply bg-[#BF5AF2] -bottom-[5%] -right-[5%]; animation: liquid-float 25s infinite alternate-reverse; }
+.bg-orb-3 { width: 450px; height: 450px; @apply bg-[#0A84FF] top-[40%] right-[25%]; animation: liquid-float 18s infinite alternate; }
 
-.glass-card-no-hover:hover {
-    transform: none;
-    border-color: var(--glass-border);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 1px 1px 0 rgba(255, 255, 255, 0.05) inset;
-}
-
-/* Liquid Magnetic Button */
-.magnetic-btn {
-  position: relative;
-  overflow: hidden;
-  border-radius: 12px;
-  padding: 10px 20px;
-  font-weight: 600;
-  color: white;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border: none;
-  cursor: pointer;
-}
-
-.magnetic-btn.primary {
-  background: var(--liquid-gradient);
-  background-size: 200% 200%;
-  animation: gradient-shift 5s ease infinite;
-  box-shadow: 0 8px 20px -4px rgba(94, 92, 230, 0.4);
-}
-
-.magnetic-btn.secondary {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-.magnetic-btn.secondary:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-.magnetic-btn.danger {
-    background: var(--danger);
-}
-.magnetic-btn.success {
-    background: var(--success);
-}
-
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.glow-orb {
-  position: absolute;
-  width: 160px;
-  height: 160px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.4), transparent 70%);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: overlay;
-  pointer-events: none;
-  transition: opacity 0.3s;
-}
-
-.btn-content {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.glass-nav {
-    background: rgba(6, 8, 16, 0.7);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--glass-border);
-}
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
 
 .glass-input {
-    background: rgba(0,0,0,0.2);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: white;
-    width: 100%;
-    padding: 12px;
-    border-radius: 12px;
-    outline: none;
-    transition: all 0.3s;
-}
-.glass-input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(94,92,230,0.2);
+  @apply bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-[14px] px-4 py-3 text-white outline-none transition-all duration-300 w-full;
 }
 
-.app-container {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+.glass-input:focus {
+  @apply border-[rgba(94,92,230,0.5)] bg-[rgba(255,255,255,0.08)] shadow-[0_0_15px_rgba(94,92,230,0.1)];
+}
+
+/* Fix for select options readability */
+select.glass-input {
+  @apply cursor-pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(255,255,255,0.5)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.25rem;
+  padding-right: 2.5rem;
+}
+
+select.glass-input option {
+  @apply bg-[#12141c] text-white;
 }

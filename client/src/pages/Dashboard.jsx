@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Package, Clock, CheckCircle, Truck, FileText, PlusCircle, Users, Wallet } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { useWallet } from '../context/WalletContext';
 import api from '../services/api';
 import GlassCard from '../components/GlassCard';
 import MagneticButton from '../components/MagneticButton';
@@ -11,7 +10,6 @@ import SkeletonLoader from '../components/SkeletonLoader';
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const { account, connectWallet } = useWallet();
   const navigate = useNavigate();
   const [stats, setStats] = useState({ total: 0, pending: 0, inTransit: 0, delivered: 0 });
   const [loading, setLoading] = useState(true);
@@ -53,7 +51,7 @@ const Dashboard = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 relative">
+    <div className="max-w-7xl mx-auto px-6 md:px-12 pt-24 pb-8 relative">
       <div className="bg-orb bg-orb-1" />
       <div className="bg-orb bg-orb-3" />
 
@@ -63,18 +61,6 @@ const Dashboard = () => {
       </motion.div>
 
       <div className="flex flex-wrap gap-4 mb-10 relative z-10">
-        {!account ? (
-          <MagneticButton variant="primary" onClick={connectWallet}>
-            <Wallet className="w-5 h-5" /> Connect Wallet
-          </MagneticButton>
-        ) : (
-          <GlassCard className="px-4 py-2 flex items-center gap-3 !p-3">
-             <div className="w-8 h-8 rounded-lg bg-success/20 flex items-center justify-center">
-                <Wallet className="w-4 h-4 text-success" />
-              </div>
-              <p className="text-sm font-medium text-white">{account.substring(0,6)}...{account.substring(38)}</p>
-          </GlassCard>
-        )}
 
         {(user.role === 'admin' || user.role === 'supplier') && (
           <MagneticButton variant="secondary" onClick={() => navigate('/shipments/create')}>

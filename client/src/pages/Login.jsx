@@ -40,7 +40,7 @@ const Login = () => {
           <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4 shadow-lg shadow-primary/30">
             <Package className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">BlockLogistics</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">ShipChain</h1>
           <p className="text-white/50">Enterprise Supply Chain on Blockchain</p>
         </div>
 
@@ -53,7 +53,7 @@ const Login = () => {
               <label className="text-sm text-white/70 font-medium">Email Address</label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
-                <input type="email" name="email" value={formData.email} onChange={handleChange} required className="glass-input pl-12" placeholder="Enter your email" />
+                <input type="email" name="email" value={formData.email} onChange={handleChange} required className="glass-input !pl-12" placeholder="Enter your email" />
               </div>
             </div>
 
@@ -61,7 +61,7 @@ const Login = () => {
               <label className="text-sm text-white/70 font-medium">Password</label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
-                <input type={showPassword ? 'text' : 'password'} name="password" value={formData.password} onChange={handleChange} required className="glass-input pl-12 pr-12" placeholder="Enter your password" />
+                <input type={showPassword ? 'text' : 'password'} name="password" value={formData.password} onChange={handleChange} required className="glass-input !pl-12 !pr-12" placeholder="Enter your password" />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/50">
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>

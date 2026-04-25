@@ -8,15 +8,13 @@ import StatusBadge from '../components/StatusBadge';
 import DeliveryTimeline from '../components/DeliveryTimeline';
 import SkeletonLoader from '../components/SkeletonLoader';
 import { useAuth } from '../context/AuthContext';
-import { useWallet } from '../context/WalletContext';
-import ShipmentTrackingABI from '../abis/ShipmentTracking.json';
 import { ArrowLeft, Box, Copy, ExternalLink, MapPin } from 'lucide-react';
+import copyToClipboard from '../utils/clipboard';
 
 const ShipmentDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { getContract, account } = useWallet();
   const [shipment, setShipment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
@@ -38,26 +36,21 @@ const ShipmentDetail = () => {
   useEffect(() => { fetchShipment(); }, [id]);
 
   const handleUpdateStatus = async () => {
-    if (!account) return toast.error("Connect wallet to update status");
+    if (!newStatus) return toast.error("Please select a status");
     if (!location) return toast.error("Please enter current location");
     setUpdating(true);
     
     try {
-      const contract = getContract(process.env.REACT_APP_CONTRACT_ADDRESS || '0x5FbDB2315678afecb367f032d93F642f64180aa3', ShipmentTrackingABI.abi);
-      const tx = await contract.updateStatus(shipment.trackingId, newStatus, location);
-      await tx.wait();
-
       await api.patch(`/shipments/${id}/status`, {
         status: newStatus,
-        location,
-        blockchainTxHash: tx.hash
+        location
       });
-
-      toast.success("Status updated and recorded on blockchain");
+      
+      toast.success("Status updated successfully!");
       fetchShipment();
     } catch (error) {
       console.error(error);
-      toast.error("Failed to update status");
+      toast.error(error.response?.data?.message || "Failed to update status");
     } finally {
       setUpdating(false);
     }
@@ -79,11 +72,41 @@ const ShipmentDetail = () => {
           <GlassCard className="p-6" hover={false}>
             <div className="flex justify-between items-start mb-6">
               <div>
-                <p className="text-sm text-white/40 font-mono mb-1 flex items-center gap-2">
-                  {shipment.trackingId} 
-                  <button onClick={() => {navigator.clipboard.writeText(shipment.trackingId); toast.info('Copied!')}} className="hover:text-white"><Copy className="w-3 h-3"/></button>
-                </p>
                 <h1 className="text-2xl font-bold text-white">{shipment.title}</h1>
+                <div style={{ display:'flex', alignItems:'center', gap:'8px', marginTop:'8px' }}>
+                  <span style={{
+                    fontFamily: 'monospace',
+                    fontSize: '12px',
+                    background: 'rgba(255,255,255,0.07)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    padding: '4px 12px',
+                    borderRadius: '8px',
+                    color: 'rgba(255,255,255,0.55)',
+                    letterSpacing: '0.04em'
+                  }}>
+                    {shipment.trackingId || 'No tracking ID'}
+                  </span>
+                  {shipment.trackingId && (
+                    <button
+                      onClick={() => {
+                        copyToClipboard(shipment.trackingId, 'Tracking ID copied!')
+                      }}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        color: 'rgba(255,255,255,0.35)',
+                        fontSize: '12px',
+                        padding: '4px 8px',
+                        borderRadius: '6px',
+                        transition: 'color 0.2s'
+                      }}
+                      className="hover:!text-white"
+                    >
+                      <Copy className="w-3.5 h-3.5 inline mr-1" />Copy
+                    </button>
+                  )}
+                </div>
               </div>
               <StatusBadge status={shipment.status} />
             </div>
@@ -146,7 +169,7 @@ const ShipmentDetail = () => {
                   />
                 </div>
                 <MagneticButton variant="primary" onClick={handleUpdateStatus} disabled={updating || newStatus === shipment.status} className="w-full">
-                  {updating ? 'Recording...' : 'Update & Record on Chain'}
+                  {updating ? 'Updating...' : 'Update Status'}
                 </MagneticButton>
               </div>
             </GlassCard>

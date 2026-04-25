@@ -1,21 +1,58 @@
+import React from 'react';
+
 const StatusBadge = ({ status }) => {
-  const getStyles = () => {
-    switch (status) {
-      case 'pending': return 'bg-warning/20 text-warning border-warning/30';
-      case 'assigned': return 'bg-primary/20 text-primary border-primary/30';
-      case 'picked_up': return 'bg-secondary/20 text-secondary border-secondary/30';
-      case 'in_transit': return 'bg-accent/20 text-accent border-accent/30';
-      case 'out_for_delivery': return 'bg-secondary/20 text-secondary border-secondary/30';
-      case 'delivered': return 'bg-success/20 text-success border-success/30';
-      case 'failed': return 'bg-danger/20 text-danger border-danger/30';
-      default: return 'bg-white/10 text-white/70 border-white/20';
+  const specs = {
+    pending: {
+      color: 'bg-[#FF9F0A]/10 text-[#FF9F0A] border-[#FF9F0A]/30 shadow-[0_0_12px_rgba(255,159,10,0.15)]',
+      label: 'Pending',
+      pulse: false
+    },
+    assigned: {
+      color: 'bg-[#0A84FF]/10 text-[#0A84FF] border-[#0A84FF]/30 shadow-[0_0_12px_rgba(10,132,255,0.15)]',
+      label: 'Assigned',
+      pulse: false
+    },
+    picked_up: {
+      color: 'bg-[#BF5AF2]/10 text-[#BF5AF2] border-[#BF5AF2]/30 shadow-[0_0_12px_rgba(191,90,242,0.15)]',
+      label: 'Picked Up',
+      pulse: false
+    },
+    in_transit: {
+      color: 'bg-[#0A84FF]/10 text-[#0A84FF] border-[#0A84FF]/40 shadow-[0_0_15px_rgba(10,132,255,0.2)]',
+      label: 'In Transit',
+      pulse: true,
+      pulseColor: 'bg-[#0A84FF]'
+    },
+    out_for_delivery: {
+      color: 'bg-[#FF9F0A]/10 text-[#FF9F0A] border-[#FF9F0A]/40 shadow-[0_0_15px_rgba(255,159,10,0.2)]',
+      label: 'Out for Delivery',
+      pulse: true,
+      pulseColor: 'bg-[#FF9F0A]'
+    },
+    delivered: {
+      color: 'bg-[#30D158]/10 text-[#30D158] border-[#30D158]/30 shadow-[0_0_12px_rgba(48,209,88,0.15)]',
+      label: 'Delivered',
+      pulse: false
+    },
+    failed: {
+      color: 'bg-[#FF453A]/10 text-[#FF453A] border-[#FF453A]/30 shadow-[0_0_12px_rgba(255,69,58,0.15)]',
+      label: 'Failed',
+      pulse: false
     }
   };
 
+  const current = specs[status] || specs.pending;
+
   return (
-    <span className={`px-3 py-1 rounded-full text-xs font-bold border uppercase tracking-wider ${getStyles()}`}>
-      {status ? status.replace(/_/g, ' ') : 'UNKNOWN'}
-    </span>
+    <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[11px] font-bold uppercase tracking-[0.05em] transition-all duration-300 ${current.color}`}>
+      {current.pulse && (
+        <span className="relative flex h-2 w-2">
+          <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${current.pulseColor}`}></span>
+          <span className={`relative inline-flex rounded-full h-2 w-2 ${current.pulseColor}`}></span>
+        </span>
+      )}
+      {current.label}
+    </div>
   );
 };
 

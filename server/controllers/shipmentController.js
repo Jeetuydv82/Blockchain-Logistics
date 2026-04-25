@@ -1,9 +1,13 @@
 const Shipment = require('../models/Shipment');
+const ethers = require('ethers');
+const ShipmentTrackingABI = require('../abis/ShipmentTracking.json');
 
 // Generate Unique Tracking ID
 const generateTrackingId = () => {
-  return 'SHP-' + new Date().getFullYear() + '-' + Math.random().toString(36).substr(2, 6).toUpperCase();
-};
+  const timestamp = Date.now().toString().slice(-6)
+  const random = Math.random().toString(36).slice(2, 6).toUpperCase()
+  return `SHP-${timestamp}-${random}`
+}
 
 exports.createShipment = async (req, res) => {
   try {
@@ -90,12 +94,24 @@ exports.assignTransporter = async (req, res) => {
 
 exports.updateStatus = async (req, res) => {
   try {
-    const { status, location, blockchainTxHash } = req.body;
-    const shipment = await Shipment.findById(req.params.id);
+    const { status, location } = req.body;
     
+    if (!status) {
+      return res.status(400).json({ message: 'Status is required' });
+    }
+    
+    const validStatuses = ['pending', 'assigned', 'picked_up', 'in_transit', 'out_for_delivery', 'delivered', 'failed'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: 'Invalid status value' });
+    }
+    
+    const shipment = await Shipment.findById(req.params.id);
     if (!shipment) return res.status(404).json({ message: 'Shipment not found' });
     
-    // Ensure transporter is assigned to this shipment
+    if (req.user.role !== 'admin' && req.user.role !== 'transporter') {
+      return res.status(403).json({ message: 'Not authorized to update status' });
+    }
+    
     if (req.user.role === 'transporter' && shipment.assignedTransporter.toString() !== req.user.id) {
       return res.status(403).json({ message: 'Not assigned to this shipment' });
     }
@@ -104,13 +120,40 @@ exports.updateStatus = async (req, res) => {
     shipment.statusHistory.push({
       status,
       updatedBy: req.user.id,
-      location,
-      blockchainTxHash,
+      location: location || '',
       timestamp: new Date()
     });
     
     await shipment.save();
-    res.json(shipment);
+    
+    let blockchainTxHash = null;
+    try {
+      const provider = new ethers.JsonRpcProvider('http://127.0.0.1:8545');
+      const wallet = new ethers.Wallet(process.env.DEPLOYER_PRIVATE_KEY, provider);
+      const contract = new ethers.Contract(
+        process.env.SHIPMENT_CONTRACT_ADDRESS,
+        ShipmentTrackingABI.abi,
+        wallet
+      );
+      const tx = await contract.updateShipmentStatus(
+        shipment.blockchainShipmentId || 0,
+        status
+      );
+      const receipt = await tx.wait();
+      blockchainTxHash = receipt.hash;
+      
+      shipment.statusHistory[shipment.statusHistory.length - 1].blockchainTxHash = blockchainTxHash;
+      await shipment.save();
+    } catch (blockchainError) {
+      console.warn('Blockchain write failed (Hardhat may not be running):', blockchainError.message);
+    }
+
+    res.json({
+      success: true,
+      shipment,
+      blockchainTxHash,
+      blockchainRecorded: !!blockchainTxHash
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
