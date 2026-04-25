@@ -1,31 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const {
-  createShipment,
-  getAllShipments,
-  getShipment,
-  updateStatus,
-  deleteShipment,
-  getShipmentByTracking,
-  predictDeliveryTime
+const { 
+  createShipment, getShipments, getShipmentById, 
+  trackShipment, assignTransporter, updateStatus 
 } = require('../controllers/shipmentController');
-const { protect } = require('../middleware/auth');
-
-// Public route - MUST come before protect middleware
-router.get('/public/:trackingNumber', getShipmentByTracking);
-
-// All other routes are protected
-router.use(protect);
+const { protect, authorize } = require('../middleware/auth');
 
 router.route('/')
-  .get(getAllShipments)
-  .post(createShipment);
+  .get(protect, authorize('admin', 'supplier', 'transporter'), getShipments)
+  .post(protect, authorize('supplier'), createShipment);
+
+router.get('/track/:trackingId', trackShipment);
 
 router.route('/:id')
-  .get(getShipment)
-  .delete(deleteShipment);
+  .get(protect, getShipmentById);
 
-router.put('/:id/status', updateStatus);
-router.get('/:id/predict-delivery', predictDeliveryTime);
+router.patch('/:id/assign', protect, authorize('admin'), assignTransporter);
+router.patch('/:id/status', protect, authorize('admin', 'transporter'), updateStatus);
 
 module.exports = router;

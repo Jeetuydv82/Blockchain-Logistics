@@ -1,81 +1,36 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.19;
 
 contract DocumentVerification {
-
-    // ─── STRUCT ───────────────────────────────────────
     struct Document {
-        string  fileHash;        // SHA256 hash of the file
-        string  fileName;        // original file name
-        string  shipmentId;      // linked shipment tracking number
-        address uploadedBy;      // wallet address of uploader
-        uint256 uploadedAt;      // timestamp
-        bool    exists;          // to check if document exists
+        string fileHash;
+        address uploadedBy;
+        uint256 uploadedAt;
+        bool exists;
     }
 
-    // ─── STORAGE ──────────────────────────────────────
-    mapping(string => Document) private documents;  // fileHash => Document
+    mapping(string => Document) private documents;
 
-    // ─── EVENTS ───────────────────────────────────────
-    event DocumentStored(
-        string  indexed fileHash,
-        string  fileName,
-        string  shipmentId,
-        address uploadedBy,
-        uint256 uploadedAt
-    );
+    event DocumentVerified(string indexed fileHash, address indexed uploadedBy);
 
-    // ─── STORE DOCUMENT HASH ──────────────────────────
-    function storeDocument(
-        string memory fileHash,
-        string memory fileName,
-        string memory shipmentId
-    ) public {
-        require(bytes(fileHash).length > 0, "Hash cannot be empty");
-        require(!documents[fileHash].exists,  "Document already stored");
-
-        documents[fileHash] = Document({
-            fileHash   : fileHash,
-            fileName   : fileName,
-            shipmentId : shipmentId,
-            uploadedBy : msg.sender,
-            uploadedAt : block.timestamp,
-            exists     : true
+    function uploadDocument(string memory _fileHash) public {
+        require(!documents[_fileHash].exists, "Document already exists on blockchain");
+        
+        documents[_fileHash] = Document({
+            fileHash: _fileHash,
+            uploadedBy: msg.sender,
+            uploadedAt: block.timestamp,
+            exists: true
         });
 
-        emit DocumentStored(fileHash, fileName, shipmentId, msg.sender, block.timestamp);
+        emit DocumentVerified(_fileHash, msg.sender);
     }
 
-    // ─── VERIFY DOCUMENT ──────────────────────────────
-    function verifyDocument(
-        string memory fileHash
-    ) public view returns (
-        bool    isVerified,
-        string  memory fileName,
-        string  memory shipmentId,
-        address uploadedBy,
-        uint256 uploadedAt
-    ) {
-        Document memory doc = documents[fileHash];
-
-        if (!doc.exists) {
-            return (false, "", "", address(0), 0);
+    function verifyDocument(string memory _fileHash) public view returns (bool, address, uint256) {
+        Document memory doc = documents[_fileHash];
+        if (doc.exists) {
+            return (true, doc.uploadedBy, doc.uploadedAt);
         }
-
-        return (
-            true,
-            doc.fileName,
-            doc.shipmentId,
-            doc.uploadedBy,
-            doc.uploadedAt
-        );
-    }
-
-    // ─── GET DOCUMENT ─────────────────────────────────
-    function getDocument(
-        string memory fileHash
-    ) public view returns (Document memory) {
-        require(documents[fileHash].exists, "Document not found");
-        return documents[fileHash];
+        return (false, address(0), 0);
     }
 }

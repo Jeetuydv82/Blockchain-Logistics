@@ -7,24 +7,28 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.15.0",
+    "axios": "^1.15.2",
+    "clsx": "^2.1.1",
     "ethers": "^6.16.0",
+    "framer-motion": "^12.38.0",
     "html5-qrcode": "^2.3.8",
     "i18next": "^26.0.5",
     "i18next-browser-languagedetector": "^8.2.1",
+    "lucide-react": "^1.11.0",
     "qrcode.react": "^4.2.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-i18next": "^17.0.4",
-    "react-router-dom": "^7.14.0",
+    "react-router-dom": "^7.14.2",
     "react-scripts": "5.0.1",
-    "react-toastify": "^11.0.5",
+    "react-toastify": "^11.1.0",
     "recharts": "^3.8.1",
+    "tailwind-merge": "^3.5.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "CI=false react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -45,5 +49,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0",
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.10",
+    "tailwindcss": "^3.4.19"
   }
 }

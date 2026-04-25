@@ -1,183 +1,72 @@
-// server/controllers/documentController.js
-const Document                     = require('../models/Document');
-const { documentContract }         = require('../config/blockchain');
-const crypto                       = require('crypto');
-const fs                           = require('fs');
-const path                         = require('path');
+const crypto = require('crypto');
+const Document = require('../models/Document');
+const Shipment = require('../models/Shipment');
 
-// ─── UPLOAD DOCUMENT ──────────────────────────────────
-const uploadDocument = async (req, res) => {
+exports.uploadDocument = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({
-        success : false,
-        message : 'No file uploaded'
-      });
+      return res.status(400).json({ message: 'No file uploaded' });
     }
+    const { shipmentId, blockchainTxHash } = req.body;
+    
+    // Create SHA256 hash
+    const hash = crypto.createHash('sha256');
+    hash.update(req.file.buffer);
+    const fileHash = hash.digest('hex');
 
-    // Generate SHA256 hash from file content
-    const fileBuffer = fs.readFileSync(req.file.path);
-    const hashSum    = crypto.createHash('sha256');
-    hashSum.update(fileBuffer);
-    const fileHash = hashSum.digest('hex');
-
-    // Save document to MongoDB
-    const document = await Document.create({
-      filename     : req.file.filename,
-      originalName : req.file.originalname,
-      fileType     : req.file.mimetype,
-      fileSize     : req.file.size,
+    const document = new Document({
+      shipmentId,
+      originalName: req.file.originalname,
+      fileSize: req.file.size,
       fileHash,
-      shipment     : req.body.shipmentId || null,
-      uploadedBy   : req.user.id
+      blockchainTxHash,
+      uploadedBy: req.user.id
     });
 
-    // ─── Store hash on blockchain ──────────────────
-    try {
-      const shipmentId = req.body.shipmentId || 'NO_SHIPMENT';
+    await document.save();
 
-      const tx = await documentContract.storeDocument(
-        fileHash,
-        req.file.originalname,
-        shipmentId
-      );
-      const receipt = await tx.wait();
-
-      document.blockchainTxHash = receipt.hash;
-      document.isVerified       = true;
-      await document.save();
-
-      console.log('✅ Document hash stored on blockchain:', receipt.hash);
-
-    } catch (blockchainError) {
-      console.error('⚠️ Blockchain error:', blockchainError.message);
+    if (shipmentId) {
+      await Shipment.findByIdAndUpdate(shipmentId, { $push: { documents: document._id } });
     }
 
-    res.status(201).json({
-      success  : true,
-      message  : 'Document uploaded successfully',
-      document : {
-        id                : document._id,
-        originalName      : document.originalName,
-        fileHash          : document.fileHash,
-        fileSize          : document.fileSize,
-        fileType          : document.fileType,
-        blockchainTxHash  : document.blockchainTxHash,
-        isVerified        : document.isVerified,
-        createdAt         : document.createdAt
-      }
-    });
-
+    res.status(201).json(document);
   } catch (error) {
-    if (error.code === 11000) {
-      return res.status(400).json({
-        success : false,
-        message : 'This document already exists in the system'
-      });
-    }
-    res.status(500).json({
-      success : false,
-      message : error.message
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
-// ─── VERIFY DOCUMENT ──────────────────────────────────
-const verifyDocument = async (req, res) => {
+exports.verifyDocument = async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({
-        success : false,
-        message : 'No file uploaded for verification'
-      });
-    }
-
-    // Generate hash of uploaded file
-    const fileBuffer = fs.readFileSync(req.file.path);
-    const hashSum    = crypto.createHash('sha256');
-    hashSum.update(fileBuffer);
-    const fileHash = hashSum.digest('hex');
-
-    // Clean up temp file
-    fs.unlinkSync(req.file.path);
-
-    // ─── Check blockchain first ────────────────────
-    let blockchainVerified = false;
-    let blockchainData     = null;
-
-    try {
-      const result = await documentContract.verifyDocument(fileHash);
-      blockchainVerified = result[0]; // isVerified boolean
-      if (blockchainVerified) {
-        blockchainData = {
-          fileName   : result[1],
-          shipmentId : result[2],
-          uploadedBy : result[3],
-          uploadedAt : new Date(Number(result[4]) * 1000).toLocaleString()
-        };
-      }
-    } catch (blockchainError) {
-      console.error('⚠️ Blockchain verify error:', blockchainError.message);
-    }
-
-    // ─── Check MongoDB ─────────────────────────────
-    const document = await Document.findOne({ fileHash })
+    const { hash } = req.params;
+    const document = await Document.findOne({ fileHash: hash })
       .populate('uploadedBy', 'name email')
-      .populate('shipment',   'trackingNumber title');
-
-    if (!document && !blockchainVerified) {
-      return res.json({
-        success            : true,
-        verified           : false,
-        blockchainVerified : false,
-        message            : '❌ Document NOT found — may be tampered or unregistered',
-        fileHash
-      });
+      .populate('shipmentId', 'trackingId title');
+      
+    if (!document) {
+      return res.status(404).json({ verified: false, message: 'Document hash not found in database' });
     }
 
     res.json({
-      success            : true,
-      verified           : true,
-      blockchainVerified,
-      message            : '✅ Document verified — authentic and untampered',
-      fileHash,
-      blockchainData,
-      document : document ? {
-        id           : document._id,
-        originalName : document.originalName,
-        uploadedBy   : document.uploadedBy,
-        shipment     : document.shipment,
-        uploadedAt   : document.createdAt
-      } : null
+      verified: true,
+      message: 'Document is authentic',
+      document
     });
-
   } catch (error) {
-    res.status(500).json({
-      success : false,
-      message : error.message
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
-// ─── GET ALL DOCUMENTS ────────────────────────────────
-const getAllDocuments = async (req, res) => {
+exports.getDocuments = async (req, res) => {
   try {
-    const documents = await Document.find({ uploadedBy: req.user.id })
-      .populate('shipment', 'trackingNumber title')
-      .sort({ createdAt: -1 });
+    let query = {};
+    if (req.user.role === 'supplier' || req.user.role === 'transporter') {
+      query.uploadedBy = req.user.id;
+    }
+    // Admin sees all
 
-    res.json({
-      success   : true,
-      count     : documents.length,
-      documents
-    });
-
+    const documents = await Document.find(query).populate('shipmentId', 'trackingId').sort({ createdAt: -1 });
+    res.json(documents);
   } catch (error) {
-    res.status(500).json({
-      success : false,
-      message : error.message
-    });
+    res.status(500).json({ message: error.message });
   }
 };
-
-module.exports = { uploadDocument, verifyDocument, getAllDocuments };

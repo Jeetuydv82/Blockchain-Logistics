@@ -1,13 +1,159 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #5E5CE6;
+  --secondary: #0A84FF;
+  --accent: #BF5AF2;
+  --success: #30D158;
+  --warning: #FF9F0A;
+  --danger: #FF453A;
+  --text-primary: #F5F5F7;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --liquid-gradient: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  font-family: 'Inter', 'Outfit', sans-serif;
+  background: #060810;
+  color: var(--text-primary);
+  overflow-x: hidden;
+  margin: 0;
+}
+
+/* Liquid Background Orbs */
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.2;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.bg-orb-1 { width: 600px; height: 600px; background: var(--primary); top: -10%; left: -10%; animation: liquid-float 20s infinite alternate; }
+.bg-orb-2 { width: 500px; height: 500px; background: var(--accent); bottom: -5%; right: -5%; animation: liquid-float 25s infinite alternate-reverse; }
+.bg-orb-3 { width: 450px; height: 450px; background: var(--secondary); top: 40%; right: 25%; animation: liquid-float 18s infinite alternate; }
+
+@keyframes liquid-float {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(5%, 10%) scale(1.1); }
+}
+
+/* Enhanced Liquid Glass Card */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 1px 1px 0 rgba(255, 255, 255, 0.05) inset;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.glass-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(94, 92, 230, 0.15);
+}
+
+.glass-card-no-hover:hover {
+    transform: none;
+    border-color: var(--glass-border);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 1px 1px 0 rgba(255, 255, 255, 0.05) inset;
+}
+
+/* Liquid Magnetic Button */
+.magnetic-btn {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-weight: 600;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.magnetic-btn.primary {
+  background: var(--liquid-gradient);
+  background-size: 200% 200%;
+  animation: gradient-shift 5s ease infinite;
+  box-shadow: 0 8px 20px -4px rgba(94, 92, 230, 0.4);
+}
+
+.magnetic-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.magnetic-btn.secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+.magnetic-btn.danger {
+    background: var(--danger);
+}
+.magnetic-btn.success {
+    background: var(--success);
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.glow-orb {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.4), transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.btn-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.glass-nav {
+    background: rgba(6, 8, 16, 0.7);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.glass-input {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.3s;
+}
+.glass-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(94,92,230,0.2);
+}
+
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
