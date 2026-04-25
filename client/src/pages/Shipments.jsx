@@ -29,7 +29,7 @@ const Shipments = () => {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 relative">
+    <div className="max-w-7xl mx-auto px-6 md:px-12 pt-24 pb-8 relative">
       <div className="bg-orb bg-orb-2" />
       
       <div className="flex justify-between items-center mb-8 relative z-10">

@@ -32,7 +32,7 @@ const CreateShipment = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-8 relative">
+    <div className="max-w-3xl mx-auto px-6 pt-24 pb-8 relative">
       <div className="bg-orb bg-orb-1" />
       
       <div className="mb-8 relative z-10">

@@ -60,7 +60,7 @@ const ShipmentDetail = () => {
   if (!shipment) return <div className="text-center text-white mt-20">Shipment not found</div>;
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-8 relative">
+    <div className="max-w-5xl mx-auto px-6 pt-24 pb-8 relative">
       <div className="bg-orb bg-orb-3" />
       
       <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-white/50 hover:text-white mb-6 relative z-10">

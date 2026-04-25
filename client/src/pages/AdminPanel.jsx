@@ -51,7 +51,7 @@ const AdminPanel = () => {
   if (loading) return <div className="p-8 max-w-7xl mx-auto"><SkeletonLoader /></div>;
 
   return (
-    <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 relative">
+    <div className="max-w-7xl mx-auto px-6 md:px-12 pt-24 pb-8 relative">
       <div className="bg-orb bg-orb-1" />
       <div className="bg-orb bg-orb-3" />
 

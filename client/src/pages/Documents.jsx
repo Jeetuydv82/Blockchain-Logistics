@@ -81,7 +81,7 @@ const Documents = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-8 relative">
+    <div className="max-w-6xl mx-auto px-6 pt-24 pb-8 relative">
       <div className="bg-orb bg-orb-2" />
       
       <div className="mb-8 relative z-10">
