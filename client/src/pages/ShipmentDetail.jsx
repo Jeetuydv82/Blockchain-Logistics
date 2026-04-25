@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../services/api';
@@ -9,7 +9,7 @@ import DeliveryTimeline from '../components/DeliveryTimeline';
 import SkeletonLoader from '../components/SkeletonLoader';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { ArrowLeft, Box, Copy, MapPin, Truck, Phone, User, Calendar, Pencil, Check, Loader2 } from 'lucide-react';
+import { ArrowLeft, Copy, MapPin, Truck, Phone, User, Calendar, Pencil, Check, Loader2 } from 'lucide-react';
 import copyToClipboard from '../utils/clipboard';
 
 const ShipmentDetail = () => {
@@ -43,7 +43,7 @@ const ShipmentDetail = () => {
     assignedDate: ''
   });
 
-  const fetchShipment = async () => {
+  const fetchShipment = useCallback(async () => {
     try {
       const res = await api.get(`/shipments/${id}`);
       setShipment(res.data);
@@ -72,9 +72,9 @@ const ShipmentDetail = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
-  useEffect(() => { fetchShipment(); }, [id]);
+  useEffect(() => { fetchShipment(); }, [fetchShipment]);
 
   const handleUpdateStatus = async () => {
     if (!newStatus) return toast.error("Please select a status");
@@ -509,7 +509,6 @@ const ShipmentDetail = () => {
                     const targetIndex = statusOrder.indexOf(s.id);
                     const isCompleted = targetIndex < currentIndex;
                     const isCurrent = shipment.status === s.id;
-                    const isFuture = targetIndex > currentIndex;
 
                     return (
                       <button

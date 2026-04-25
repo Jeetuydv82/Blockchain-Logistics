@@ -3,13 +3,11 @@ import { motion } from 'framer-motion';
 import api from '../services/api';
 import SkeletonLoader from '../components/SkeletonLoader';
 import StatusBadge from '../components/StatusBadge';
-import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { Users, Truck, Package, Activity, Shield } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 const AdminPanel = () => {
-  const { user } = useAuth();
   const { darkMode } = useTheme();
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);

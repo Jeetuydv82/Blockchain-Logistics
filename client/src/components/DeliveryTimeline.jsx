@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Check, Copy, ExternalLink, ShieldCheck } from 'lucide-react';
+import { Check, Copy, ShieldCheck } from 'lucide-react';
 import copyToClipboard from '../utils/clipboard';
 
 const DeliveryTimeline = ({ history = [] }) => {

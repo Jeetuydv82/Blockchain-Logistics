@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { Mail, Lock, Package, Eye, EyeOff, Sun, Moon } from 'lucide-react';
+import { Package, Eye, EyeOff, Sun, Moon } from 'lucide-react';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -226,13 +226,12 @@ const Login = () => {
                 style={{
                   position: 'absolute',
                   bottom: '0',
-                  left: '50%',
+                  left: focusedField === 'email' ? '0' : '50%',
                   width: focusedField === 'email' ? '100%' : '0%',
                   height: '2px',
                   background: 'linear-gradient(90deg, #10b981, #14b8a6)',
                   borderRadius: '2px',
-                  transition: 'all 0.3s ease',
-                  left: focusedField === 'email' ? '0' : '50%'
+                  transition: 'all 0.3s ease'
                 }}
               />
             </motion.div>
