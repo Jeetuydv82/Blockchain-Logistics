@@ -4,12 +4,13 @@ import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { User, Mail, Lock, Package, ArrowRight, Eye, EyeOff, Shield, Truck, ShoppingBag, Sun, Moon } from 'lucide-react';
+import { User, Package, Eye, EyeOff, Sun, Moon } from 'lucide-react';
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'customer' });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [focusedField, setFocusedField] = useState(null);
   const { register } = useAuth();
   const { darkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -30,100 +31,625 @@ const Register = () => {
     }
   };
 
+  const getPasswordStrength = (password) => {
+    if (!password) return 0;
+    if (password.length < 6) return 1;
+    if (password.length < 10) return 2;
+    return 3;
+  };
+
+  const strength = getPasswordStrength(formData.password);
+
   const roles = [
-    { value: 'customer', label: 'Customer', icon: User, desc: 'Track your shipments' },
-    { value: 'supplier', label: 'Supplier', icon: ShoppingBag, desc: 'Create & manage shipments' },
-    { value: 'transporter', label: 'Transporter', icon: Truck, desc: 'Deliver shipments' },
-    { value: 'admin', label: 'Admin', icon: Shield, desc: 'Full platform access' },
+    { value: 'customer', label: 'Customer', icon: User, desc: 'Track shipments' },
+    { value: 'supplier', label: 'Supplier', icon: Package, desc: 'Manage shipments' },
+    { value: 'transporter', label: 'Transporter', icon: Package, desc: 'Deliver goods' },
+    { value: 'admin', label: 'Admin', icon: Package, desc: 'Full access' },
   ];
 
   return (
     <div className={`min-h-screen flex items-center justify-center px-6 md:px-12 py-4 relative overflow-hidden ${darkMode ? 'dark' : 'light'}`}>
-      {/* Animated Background */}
-      <div className={darkMode ? "dark-bg" : "light-bg"} />
-      
-      {/* Theme Toggle */}
-      <div className="absolute top-4 right-4 z-20">
-        <button onClick={toggleTheme} className="theme-toggle">
-          {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-        </button>
+      {/* Animated Blobs Background */}
+      <div className="blob-container">
+        <div className="blob blob-1" />
+        <div className="blob blob-2" />
+        <div className="blob blob-3" />
+        <div className="blob blob-4" />
       </div>
 
-      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="w-full max-w-lg z-10 py-12">
+      {/* Theme Toggle */}
+      <motion.button
+        onClick={toggleTheme}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="absolute top-5 right-5 z-20 p-3 rounded-xl"
+        style={{
+          background: 'rgba(255,255,255,0.08)',
+          backdropFilter: 'blur(16px)',
+          border: '1px solid rgba(255,255,255,0.12)',
+          color: 'rgba(255,255,255,0.6)'
+        }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+      </motion.button>
+
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
+        className="w-full max-w-lg z-10"
+      >
         <div className="text-center mb-8">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-amber-500 flex items-center justify-center mb-4" style={{ boxShadow: '0 0 30px rgba(16, 185, 129, 0.4)' }}>
-            <Package className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-3xl font-bold mb-2 welcome-heading">Join ShipChain</h1>
-          <p className="welcome-subtitle">Create your account and start shipping</p>
+          <motion.div
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.34, 1.56, 0.64, 1] }}
+          >
+            <div
+              className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4"
+              style={{
+                background: 'linear-gradient(135deg, rgba(16,185,129,0.4) 0%, rgba(245,158,11,0.3) 100%)',
+                boxShadow: '0 0 30px rgba(16, 185, 129, 0.4), 0 0 60px rgba(16, 185, 129, 0.2)',
+                animation: 'float 4s ease-in-out infinite'
+              }}
+            >
+              <Package className="w-8 h-8 text-white" />
+            </div>
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.6 }}
+            className="text-3xl font-bold mb-2"
+            style={{
+              background: 'linear-gradient(135deg, #10b981, #f59e0b)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}
+          >
+            Join ShipChain
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="text-sm"
+            style={{ color: 'rgba(255,255,255,0.5)' }}
+          >
+            Create your account and start shipping
+          </motion.p>
         </div>
 
-        <div className="glass-card p-8">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="glass-card-custom p-8"
+          style={{
+            background: 'rgba(255,255,255,0.06)',
+            backdropFilter: 'blur(40px) saturate(200%) brightness(115%)',
+            WebkitBackdropFilter: 'blur(40px) saturate(200%) brightness(115%)',
+            border: '1px solid rgba(255,255,255,0.13)',
+            borderRadius: '32px',
+            boxShadow: `
+              0 0 0 1px rgba(255,255,255,0.05),
+              0 30px 80px rgba(0,0,0,0.5),
+              0 0 60px rgba(16,185,129,0.08),
+              inset 0 1px 0 rgba(255,255,255,0.18),
+              inset 0 -1px 0 rgba(0,0,0,0.15)
+            `
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.boxShadow = `
+              0 0 0 1px rgba(255,255,255,0.05),
+              0 30px 80px rgba(0,0,0,0.5),
+              0 0 60px rgba(16,185,129,0.08),
+              0 0 100px 20px rgba(16,185,129,0.08),
+              0 0 200px 40px rgba(245,158,11,0.04),
+              inset 0 1px 0 rgba(255,255,255,0.18),
+              inset 0 -1px 0 rgba(0,0,0,0.15)
+            `;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.boxShadow = `
+              0 0 0 1px rgba(255,255,255,0.05),
+              0 30px 80px rgba(0,0,0,0.5),
+              0 0 60px rgba(16,185,129,0.08),
+              inset 0 1px 0 rgba(255,255,255,0.18),
+              inset 0 -1px 0 rgba(0,0,0,0.15)
+            `;
+          }}
+        >
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="space-y-2">
-              <label className="text-sm font-medium welcome-subtitle">Full Name</label>
-              <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: darkMode ? 'rgba(255,255,255,0.4)' : '#94a3b8' }} />
-                <input type="text" name="name" value={formData.name} onChange={handleChange} required className="glass-input !pl-12" placeholder="Enter your name" />
-              </div>
-            </div>
+            {/* Name Field */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.35, duration: 0.5 }}
+              className="relative"
+            >
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                onFocus={() => setFocusedField('name')}
+                onBlur={() => setFocusedField(null)}
+                required
+                className="glass-input-custom peer"
+                placeholder=" "
+                style={{
+                  background: 'rgba(255,255,255,0.07)',
+                  backdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  borderRadius: '16px',
+                  padding: '16px 20px',
+                  color: 'white',
+                  fontSize: '1rem',
+                  width: '100%',
+                  outline: 'none',
+                  transition: 'all 0.35s cubic-bezier(0.34,1.56,0.64,1)'
+                }}
+              />
+              <label
+                style={{
+                  position: 'absolute',
+                  top: focusedField === 'name' || formData.name ? '-10px' : '50%',
+                  left: '20px',
+                  transform: focusedField === 'name' || formData.name ? 'scale(0.82) translateY(0)' : 'translateY(-50%)',
+                  color: focusedField === 'name' || formData.name ? 'rgba(16,185,129,0.9)' : 'rgba(255,255,255,0.35)',
+                  fontSize: focusedField === 'name' || formData.name ? '0.75rem' : '0.95rem',
+                  background: focusedField === 'name' || formData.name ? 'rgba(16,185,129,0.1)' : 'transparent',
+                  padding: focusedField === 'name' || formData.name ? '2px 8px' : '0',
+                  borderRadius: '6px',
+                  border: focusedField === 'name' || formData.name ? '1px solid rgba(16,185,129,0.3)' : 'none',
+                  pointerEvents: 'none',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Full Name
+              </label>
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '0',
+                  left: focusedField === 'name' ? '0' : '50%',
+                  width: focusedField === 'name' ? '100%' : '0%',
+                  height: '2px',
+                  background: 'linear-gradient(90deg, #10b981, #14b8a6)',
+                  borderRadius: '2px',
+                  transition: 'all 0.3s ease'
+                }}
+              />
+            </motion.div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium welcome-subtitle">Email Address</label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: darkMode ? 'rgba(255,255,255,0.4)' : '#94a3b8' }} />
-                <input type="email" name="email" value={formData.email} onChange={handleChange} required className="glass-input !pl-12" placeholder="Enter your email" />
-              </div>
-            </div>
+            {/* Email Field */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              className="relative"
+            >
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                onFocus={() => setFocusedField('email')}
+                onBlur={() => setFocusedField(null)}
+                required
+                className="glass-input-custom peer"
+                placeholder=" "
+                style={{
+                  background: 'rgba(255,255,255,0.07)',
+                  backdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  borderRadius: '16px',
+                  padding: '16px 20px',
+                  color: 'white',
+                  fontSize: '1rem',
+                  width: '100%',
+                  outline: 'none',
+                  transition: 'all 0.35s cubic-bezier(0.34,1.56,0.64,1)'
+                }}
+              />
+              <label
+                style={{
+                  position: 'absolute',
+                  top: focusedField === 'email' || formData.email ? '-10px' : '50%',
+                  left: '20px',
+                  transform: focusedField === 'email' || formData.email ? 'scale(0.82) translateY(0)' : 'translateY(-50%)',
+                  color: focusedField === 'email' || formData.email ? 'rgba(16,185,129,0.9)' : 'rgba(255,255,255,0.35)',
+                  fontSize: focusedField === 'email' || formData.email ? '0.75rem' : '0.95rem',
+                  background: focusedField === 'email' || formData.email ? 'rgba(16,185,129,0.1)' : 'transparent',
+                  padding: focusedField === 'email' || formData.email ? '2px 8px' : '0',
+                  borderRadius: '6px',
+                  border: focusedField === 'email' || formData.email ? '1px solid rgba(16,185,129,0.3)' : 'none',
+                  pointerEvents: 'none',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Email Address
+              </label>
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '0',
+                  left: focusedField === 'email' ? '0' : '50%',
+                  width: focusedField === 'email' ? '100%' : '0%',
+                  height: '2px',
+                  background: 'linear-gradient(90deg, #10b981, #14b8a6)',
+                  borderRadius: '2px',
+                  transition: 'all 0.3s ease'
+                }}
+              />
+            </motion.div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium welcome-subtitle">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: darkMode ? 'rgba(255,255,255,0.4)' : '#94a3b8' }} />
-                <input type={showPassword ? 'text' : 'password'} name="password" value={formData.password} onChange={handleChange} required className="glass-input !pl-12 !pr-12" placeholder="Create a password" />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2" style={{ color: darkMode ? 'rgba(255,255,255,0.4)' : '#94a3b8' }}>
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
+            {/* Password Field */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.45, duration: 0.5 }}
+              className="relative"
+            >
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                onFocus={() => setFocusedField('password')}
+                onBlur={() => setFocusedField(null)}
+                required
+                className="glass-input-custom peer"
+                placeholder=" "
+                style={{
+                  background: 'rgba(255,255,255,0.07)',
+                  backdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  borderRadius: '16px',
+                  padding: '16px 50px 16px 20px',
+                  color: 'white',
+                  fontSize: '1rem',
+                  width: '100%',
+                  outline: 'none',
+                  transition: 'all 0.35s cubic-bezier(0.34,1.56,0.64,1)'
+                }}
+              />
+              <label
+                style={{
+                  position: 'absolute',
+                  top: focusedField === 'password' || formData.password ? '-10px' : '50%',
+                  left: '20px',
+                  transform: focusedField === 'password' || formData.password ? 'scale(0.82) translateY(0)' : 'translateY(-50%)',
+                  color: focusedField === 'password' || formData.password ? 'rgba(16,185,129,0.9)' : 'rgba(255,255,255,0.35)',
+                  fontSize: focusedField === 'password' || formData.password ? '0.75rem' : '0.95rem',
+                  background: focusedField === 'password' || formData.password ? 'rgba(16,185,129,0.1)' : 'transparent',
+                  padding: focusedField === 'password' || formData.password ? '2px 8px' : '0',
+                  borderRadius: '6px',
+                  border: focusedField === 'password' || formData.password ? '1px solid rgba(16,185,129,0.3)' : 'none',
+                  pointerEvents: 'none',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Password
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '16px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: showPassword ? 'rgba(16,185,129,0.9)' : 'rgba(255,255,255,0.3)',
+                  filter: showPassword ? 'drop-shadow(0 0 6px rgba(16,185,129,0.5))' : 'none',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '-8px',
+                  left: '0',
+                  width: '100%',
+                  height: '4px',
+                  background: 'rgba(255,255,255,0.08)',
+                  borderRadius: '4px',
+                  overflow: 'hidden'
+                }}
+              >
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{
+                    width: formData.password ? `${(strength / 3) * 100}%` : '0%'
+                  }}
+                  transition={{ duration: 0.3 }}
+                  style={{
+                    height: '100%',
+                    borderRadius: '4px',
+                    background: strength === 1 ? '#f43f5e' : strength === 2 ? '#f59e0b' : '#10b981'
+                  }}
+                />
               </div>
-            </div>
+            </motion.div>
 
-            <div className="space-y-3">
-              <label className="text-sm font-medium welcome-subtitle">Select Your Role</label>
+            {/* Role Selector */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="space-y-3"
+            >
+              <label
+                style={{
+                  color: 'rgba(255,255,255,0.7)',
+                  fontSize: '0.9rem',
+                  fontWeight: '500'
+                }}
+              >
+                Select Your Role
+              </label>
               <div className="grid grid-cols-2 gap-3">
                 {roles.map((r) => (
-                  <label 
-                    key={r.value} 
-                    className={`flex items-start gap-3 p-3 rounded-2xl cursor-pointer border transition-all ${
-                      formData.role === r.value 
-                        ? darkMode 
-                          ? 'bg-emerald-500/20 border-emerald-500/50' 
-                          : 'bg-violet-100 border-violet-400'
-                        : darkMode 
-                          ? 'bg-white/5 border-white/10' 
-                          : 'bg-white/50 border-gray-200'
-                    }`}
+                  <label
+                    key={r.value}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '12px',
+                      padding: '12px',
+                      borderRadius: '16px',
+                      cursor: 'pointer',
+                      border: `1px solid ${formData.role === r.value ? 'rgba(16,185,129,0.5)' : 'rgba(255,255,255,0.12)'}`,
+                      background: formData.role === r.value ? 'rgba(16,185,129,0.15)' : 'rgba(255,255,255,0.05)',
+                      transition: 'all 0.3s ease'
+                    }}
                   >
-                    <input type="radio" name="role" value={r.value} checked={formData.role === r.value} onChange={handleChange} className="hidden" />
-                    <r.icon className="w-5 h-5 mt-1" style={{ color: formData.role === r.value ? '#10b981' : darkMode ? 'rgba(255,255,255,0.5)' : '#94a3b8' }} />
+                    <input
+                      type="radio"
+                      name="role"
+                      value={r.value}
+                      checked={formData.role === r.value}
+                      onChange={handleChange}
+                      style={{ display: 'none' }}
+                    />
+                    <r.icon
+                      className="w-5 h-5 mt-0.5"
+                      style={{
+                        color: formData.role === r.value ? '#10b981' : 'rgba(255,255,255,0.4)'
+                      }}
+                    />
                     <div>
-                      <p className="text-sm font-medium" style={{ color: darkMode ? '#fff' : '#1e293b' }}>{r.label}</p>
-                      <p className="text-xs welcome-subtitle">{r.desc}</p>
+                      <p className="text-sm font-medium" style={{ color: '#fff' }}>{r.label}</p>
+                      <p className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>{r.desc}</p>
                     </div>
                   </label>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
-            <button type="submit" disabled={loading} className="action-btn w-full !py-4 mt-4">
-              {loading ? 'Creating...' : <span className="flex items-center gap-2">Create Account <ArrowRight className="w-5 h-5" /></span>}
-            </button>
+            {/* Submit Button */}
+            <motion.button
+              type="submit"
+              disabled={loading}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.55, duration: 0.5 }}
+              className="register-button"
+              style={{
+                background: 'linear-gradient(135deg, rgba(16,185,129,0.5) 0%, rgba(20,184,166,0.4) 100%)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                border: '1px solid rgba(16,185,129,0.6)',
+                borderRadius: '18px',
+                padding: '18px',
+                width: '100%',
+                color: '#ffffff !important',
+                fontWeight: '700',
+                fontSize: '1rem',
+                letterSpacing: '0.05em',
+                cursor: 'pointer',
+                position: 'relative',
+                overflow: 'hidden',
+                opacity: 1,
+                visibility: 'visible',
+                zIndex: 10,
+                transition: 'all 0.3s ease'
+              }}
+            >
+              <span style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)',
+                transform: 'translateX(-100%)',
+                animation: 'shimmer 3s infinite',
+                pointerEvents: 'none'
+              }} />
+              <span className="button-text relative z-10">
+                {loading ? 'Creating...' : 'Create Account'}
+              </span>
+            </motion.button>
           </form>
 
-          <div className="mt-6 text-center text-sm welcome-subtitle">
-            Already have an account? <Link to="/login" className="font-bold" style={{ color: '#10b981' }}>Sign in</Link>
-          </div>
-        </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="mt-6 text-center text-sm"
+            style={{ color: 'rgba(255,255,255,0.5)' }}
+          >
+            Already have an account?{' '}
+            <Link
+              to="/login"
+              style={{
+                background: 'linear-gradient(135deg, #10b981, #f59e0b)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                textDecoration: 'none',
+                fontWeight: 'bold',
+                position: 'relative'
+              }}
+              className="gradient-link"
+            >
+              Sign in
+            </Link>
+          </motion.div>
+        </motion.div>
       </motion.div>
+
+      <style>{`
+        @keyframes blobFloat {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          25% { transform: translate(30px, -30px) scale(1.1); }
+          50% { transform: translate(-20px, 20px) scale(0.9); }
+          75% { transform: translate(20px, 10px) scale(1.05); }
+        }
+
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          50%, 100% { transform: translateX(100%); }
+        }
+
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
+        }
+
+        .blob-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 0;
+          overflow: hidden;
+          background: #080c09;
+        }
+
+        .blob {
+          position: absolute;
+          border-radius: 50%;
+          width: 500px;
+          height: 500px;
+          filter: blur(120px);
+        }
+
+        .blob-1 {
+          top: -100px;
+          left: -100px;
+          background: #10b981;
+          opacity: 0.2;
+          animation: blobFloat 18s infinite alternate;
+        }
+
+        .blob-2 {
+          bottom: -100px;
+          right: -100px;
+          background: #f59e0b;
+          opacity: 0.15;
+          animation: blobFloat 20s infinite alternate-reverse;
+          animation-delay: -5s;
+        }
+
+        .blob-3 {
+          top: 50%;
+          right: 20%;
+          background: #f43f5e;
+          opacity: 0.12;
+          animation: blobFloat 15s infinite alternate;
+          animation-delay: -10s;
+        }
+
+        .blob-4 {
+          top: -50px;
+          right: -50px;
+          background: #14b8a6;
+          opacity: 0.1;
+          animation: blobFloat 22s infinite alternate-reverse;
+          animation-delay: -3s;
+        }
+
+        .gradient-link {
+          position: relative;
+        }
+
+        .gradient-link::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background: linear-gradient(90deg, #10b981, #f59e0b);
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 0.3s ease;
+        }
+
+        .gradient-link:hover::after {
+          transform: scaleX(1);
+        }
+
+        .gradient-link:hover {
+          filter: drop-shadow(0 0 8px rgba(16,185,129,0.6));
+        }
+
+        .glass-input-custom:focus {
+          border-color: rgba(16,185,129,0.7) !important;
+          background: rgba(255,255,255,0.1) !important;
+          box-shadow: 0 0 0 3px rgba(16,185,129,0.15), 0 0 20px rgba(16,185,129,0.12), inset 0 1px 0 rgba(255,255,255,0.15) !important;
+        }
+
+        .register-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .register-button:hover {
+          background: linear-gradient(135deg, rgba(16,185,129,0.75) 0%, rgba(20,184,166,0.65) 100%) !important;
+          color: #ffffff !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+          transform: translateY(-3px) scale(1.02);
+          box-shadow: 0 0 0 1px rgba(16,185,129,0.8), 0 0 30px rgba(16,185,129,0.4), 0 20px 40px rgba(0,0,0,0.3);
+          border-color: rgba(16,185,129,0.9) !important;
+        }
+
+        .register-button:active {
+          transform: scale(0.97) translateY(0) !important;
+          background: linear-gradient(135deg, rgba(16,185,129,0.9) 0%, rgba(20,184,166,0.8) 100%) !important;
+          color: #ffffff !important;
+          opacity: 1 !important;
+        }
+
+        .register-button:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .button-text {
+          color: #ffffff !important;
+        }
+
+        .register-button:hover .button-text {
+          color: #ffffff !important;
+        }
+      `}</style>
     </div>
   );
 };
