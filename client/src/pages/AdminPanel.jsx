@@ -63,8 +63,8 @@ const AdminPanel = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-12 pt-28 pb-8 relative z-10">
         <div className="mb-8">
           <h1 className="welcome-heading text-3xl flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(255, 255, 255,0.2)', border: '1px solid rgba(255, 255, 255,0.35)' }}>
-              <Shield className="w-6 h-6" style={{ color: '#ffffff' }} />
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)' }}>
+              <Shield className="w-6 h-6" style={{ color: 'var(--accent)' }} />
             </div>
             System Administration
           </h1>
@@ -75,67 +75,67 @@ const AdminPanel = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-5">
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-sm stat-label">Total Shipments</h3>
-              <Package className="w-4 h-4" style={{ color: '#ffffff' }} />
+              <Package className="w-4 h-4" style={{ color: 'var(--accent)' }} />
             </div>
-            <p className="text-2xl font-bold" style={{ color: darkMode ? '#fff' : '#1e293b' }}>{stats?.totalOrders || 0}</p>
+            <p className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{stats?.totalOrders || 0}</p>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass-card p-5">
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-sm stat-label">Total Revenue (10%)</h3>
-              <Activity className="w-4 h-4" style={{ color: '#ffffff' }} />
+              <Activity className="w-4 h-4" style={{ color: 'var(--accent)' }} />
             </div>
-            <p className="text-2xl font-bold" style={{ color: darkMode ? '#fff' : '#1e293b' }}>${stats?.revenue?.toFixed(2) || 0}</p>
+            <p className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>${stats?.revenue?.toFixed(2) || 0}</p>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass-card p-5">
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-sm stat-label">Active Users</h3>
-              <Users className="w-4 h-4" style={{ color: '#06B6D4' }} />
+              <Users className="w-4 h-4" style={{ color: 'var(--accent-amber)' }} />
             </div>
-            <p className="text-2xl font-bold" style={{ color: darkMode ? '#fff' : '#1e293b' }}>{users.length}</p>
+            <p className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{users.length}</p>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass-card p-5">
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-sm stat-label">Transporters</h3>
-              <Truck className="w-4 h-4" style={{ color: '#a1a1aa' }} />
+              <Truck className="w-4 h-4" style={{ color: 'var(--accent-red)' }} />
             </div>
-            <p className="text-2xl font-bold" style={{ color: darkMode ? '#fff' : '#1e293b' }}>{transporters.length}</p>
+            <p className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{transporters.length}</p>
           </motion.div>
         </div>
 
         {/* All Shipments Table */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card p-6 mb-8">
-          <h3 className="text-xl font-bold mb-6 border-b pb-2" style={{ color: darkMode ? '#fff' : '#1e293b', borderColor: darkMode ? 'rgba(255,255,255,0.1)' : '#e5e7eb' }}>All Shipments</h3>
+          <h3 className="text-xl font-bold mb-6 border-b pb-2" style={{ color: 'var(--text-primary)', borderColor: 'var(--glass-border)' }}>All Shipments</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b" style={{ borderColor: darkMode ? 'rgba(255,255,255,0.1)' : '#e5e7eb' }}>
-                  <th style={{ padding:'10px 12px', color: darkMode ? 'rgba(255,255,255,0.4)' : '#9ca3af', fontWeight:500, fontSize:'12px' }}>Tracking ID</th>
-                  <th style={{ padding:'10px 12px', color: darkMode ? 'rgba(255,255,255,0.4)' : '#9ca3af', fontWeight:500, fontSize:'12px' }}>Title</th>
-                  <th style={{ padding:'10px 12px', color: darkMode ? 'rgba(255,255,255,0.4)' : '#9ca3af', fontWeight:500, fontSize:'12px' }}>Origin</th>
-                  <th style={{ padding:'10px 12px', color: darkMode ? 'rgba(255,255,255,0.4)' : '#9ca3af', fontWeight:500, fontSize:'12px' }}>Destination</th>
-                  <th style={{ padding:'10px 12px', color: darkMode ? 'rgba(255,255,255,0.4)' : '#9ca3af', fontWeight:500, fontSize:'12px' }}>Status</th>
-                  <th style={{ padding:'10px 12px', color: darkMode ? 'rgba(255,255,255,0.4)' : '#9ca3af', fontWeight:500, fontSize:'12px' }}>Created</th>
+                <tr className="border-b" style={{ borderColor: 'var(--glass-border)' }}>
+                  <th style={{ padding:'10px 12px', color: 'var(--text-tertiary)', fontWeight:500, fontSize:'12px' }}>Tracking ID</th>
+                  <th style={{ padding:'10px 12px', color: 'var(--text-tertiary)', fontWeight:500, fontSize:'12px' }}>Title</th>
+                  <th style={{ padding:'10px 12px', color: 'var(--text-tertiary)', fontWeight:500, fontSize:'12px' }}>Origin</th>
+                  <th style={{ padding:'10px 12px', color: 'var(--text-tertiary)', fontWeight:500, fontSize:'12px' }}>Destination</th>
+                  <th style={{ padding:'10px 12px', color: 'var(--text-tertiary)', fontWeight:500, fontSize:'12px' }}>Status</th>
+                  <th style={{ padding:'10px 12px', color: 'var(--text-tertiary)', fontWeight:500, fontSize:'12px' }}>Created</th>
                 </tr>
               </thead>
               <tbody>
                 {shipments.map(shipment => (
-                  <tr key={shipment._id} className="border-b transition-all cursor-pointer" style={{ borderColor: darkMode ? 'rgba(255,255,255,0.05)' : '#e5e7eb' }}>
-                    <td style={{ padding:'10px 12px', fontFamily:'monospace', fontSize:'11px', color: darkMode ? 'rgba(255,255,255,0.45)' : '#6b7280' }}>
+                  <tr key={shipment._id} className="border-b transition-all cursor-pointer" style={{ borderColor: 'var(--glass-border)' }}>
+                    <td style={{ padding:'10px 12px', fontFamily:'monospace', fontSize:'11px', color: 'var(--text-tertiary)' }}>
                       {shipment.trackingId || '—'}
                     </td>
-                    <td style={{ padding:'10px 12px', fontSize:'13px', color: darkMode ? 'rgba(255,255,255,0.8)' : '#1e293b', fontWeight:500 }}>
+                    <td style={{ padding:'10px 12px', fontSize:'13px', color: 'var(--text-primary)', fontWeight:500 }}>
                       {shipment.title}
                     </td>
-                    <td style={{ padding:'10px 12px', fontSize:'12px', color: darkMode ? 'rgba(255,255,255,0.5)' : '#6b7280' }}>
+                    <td style={{ padding:'10px 12px', fontSize:'12px', color: 'var(--text-secondary)' }}>
                       {shipment.origin || '—'}
                     </td>
-                    <td style={{ padding:'10px 12px', fontSize:'12px', color: darkMode ? 'rgba(255,255,255,0.5)' : '#6b7280' }}>
+                    <td style={{ padding:'10px 12px', fontSize:'12px', color: 'var(--text-secondary)' }}>
                       {shipment.destination || '—'}
                     </td>
                     <td style={{ padding:'10px 12px' }}>
                       <StatusBadge status={shipment.status} />
                     </td>
-                    <td style={{ padding:'10px 12px', fontSize:'12px', color: darkMode ? 'rgba(255,255,255,0.4)' : '#9ca3af' }}>
+                    <td style={{ padding:'10px 12px', fontSize:'12px', color: 'var(--text-tertiary)' }}>
                       {new Date(shipment.createdAt).toLocaleDateString()}
                     </td>
                   </tr>
@@ -157,22 +157,23 @@ const AdminPanel = () => {
               <div className="space-y-4">
                 {shipments.filter(s => s.status === 'pending').map(shipment => (
                   <div key={shipment._id} className="p-4 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4" style={{ 
-                    background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(212, 212, 216,0.05)',
-                    border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(212, 212, 216,0.15)'}`
+                    background: 'var(--glass-bg)',
+                    border: '1px solid var(--glass-border)'
                   }}>
                     <div>
-                      <p className="font-medium" style={{ color: darkMode ? '#fff' : '#1e293b' }}>{shipment.title}</p>
-                      <p className="text-xs font-mono stat-label">{shipment.trackingId || '—'}</p>
+                      <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{shipment.title}</p>
+                      <p className="text-xs font-mono" style={{ color: 'var(--text-tertiary)' }}>{shipment.trackingId || '—'}</p>
                     </div>
                     <div className="flex gap-2 w-full md:w-auto">
                       <select 
-                        className="glass-input !py-2 !px-3 text-sm flex-1 md:w-48"
+                        className="glass-input !py-2 !px-3 text-sm flex-1 md:w-48 appearance-none"
+                        style={{ background: 'var(--glass-bg)', color: 'var(--text-primary)', border: '1px solid var(--glass-border)' }}
                         onChange={(e) => handleAssignTransporter(shipment._id, e.target.value)}
                         defaultValue=""
                       >
-                        <option value="" disabled>Select Transporter</option>
+                        <option value="" disabled className={darkMode ? "bg-zinc-900 text-zinc-400" : "bg-white text-zinc-500"}>Select Transporter</option>
                         {transporters.map(t => (
-                          <option key={t._id} value={t._id}>{t.name}</option>
+                          <option key={t._id} value={t._id} className={darkMode ? "bg-zinc-900 text-white" : "bg-white text-zinc-900"}>{t.name}</option>
                         ))}
                       </select>
                     </div>
@@ -187,21 +188,21 @@ const AdminPanel = () => {
 
           <div>
             <div className="glass-card p-6">
-              <h3 className="text-xl font-bold mb-6 border-b pb-2" style={{ color: darkMode ? '#fff' : '#1e293b', borderColor: darkMode ? 'rgba(255,255,255,0.1)' : '#e5e7eb' }}>User Directory</h3>
+              <h3 className="text-xl font-bold mb-6 border-b pb-2" style={{ color: 'var(--text-primary)', borderColor: 'var(--glass-border)' }}>User Directory</h3>
               <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
                 {users.map(u => (
-                  <div key={u._id} className="p-3 rounded-lg flex items-center justify-between" style={{ 
-                    background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(212, 212, 216,0.05)',
-                    border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(212, 212, 216,0.15)'}`
+                  <div key={u._id} className="p-3 rounded-xl flex items-center justify-between" style={{ 
+                    background: 'var(--glass-bg)',
+                    border: '1px solid var(--glass-border)'
                   }}>
                     <div>
-                      <p className="text-sm font-medium" style={{ color: darkMode ? '#fff' : '#1e293b' }}>{u.name}</p>
-                      <p className="text-xs stat-label">{u.email}</p>
+                      <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{u.name}</p>
+                      <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{u.email}</p>
                     </div>
                     <span className="text-[10px] uppercase font-bold px-2 py-1 rounded border" style={{
-                      background: u.role === 'admin' ? 'rgba(255, 255, 255,0.2)' : u.role === 'transporter' ? 'rgba(161, 161, 170,0.2)' : 'rgba(212, 212, 216,0.2)',
-                      color: u.role === 'admin' ? '#ffffff' : u.role === 'transporter' ? '#a1a1aa' : '#d4d4d8',
-                      borderColor: u.role === 'admin' ? 'rgba(255, 255, 255,0.35)' : u.role === 'transporter' ? 'rgba(161, 161, 170,0.35)' : 'rgba(212, 212, 216,0.35)'
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      color: u.role === 'admin' ? 'var(--accent)' : 'var(--text-secondary)',
+                      borderColor: 'var(--glass-border)'
                     }}>
                       {u.role}
                     </span>

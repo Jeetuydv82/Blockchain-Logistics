@@ -2,43 +2,45 @@ import React from 'react';
 
 const StatusBadge = ({ status }) => {
   const specs = {
+  const specs = {
     pending: {
-      color: 'bg-[#FF9F0A]/10 text-[#FF9F0A] border-[#FF9F0A]/30 shadow-[0_0_12px_rgba(255,159,10,0.15)]',
+      color: 'bg-zinc-800/20 text-zinc-400 border-zinc-700/30',
       label: 'Pending',
       pulse: false
     },
     assigned: {
-      color: 'bg-[#0A84FF]/10 text-[#0A84FF] border-[#0A84FF]/30 shadow-[0_0_12px_rgba(10,132,255,0.15)]',
+      color: 'bg-zinc-700/20 text-zinc-300 border-zinc-600/30',
       label: 'Assigned',
       pulse: false
     },
     picked_up: {
-      color: 'bg-[#BF5AF2]/10 text-[#BF5AF2] border-[#BF5AF2]/30 shadow-[0_0_12px_rgba(191,90,242,0.15)]',
+      color: 'bg-zinc-600/20 text-zinc-200 border-zinc-500/30',
       label: 'Picked Up',
       pulse: false
     },
     in_transit: {
-      color: 'bg-[#0A84FF]/10 text-[#0A84FF] border-[#0A84FF]/40 shadow-[0_0_15px_rgba(10,132,255,0.2)]',
+      color: 'bg-white/10 text-white border-white/30',
       label: 'In Transit',
       pulse: true,
-      pulseColor: 'bg-[#0A84FF]'
+      pulseColor: 'bg-white'
     },
     out_for_delivery: {
-      color: 'bg-[#FF9F0A]/10 text-[#FF9F0A] border-[#FF9F0A]/40 shadow-[0_0_15px_rgba(255,159,10,0.2)]',
+      color: 'bg-white/20 text-white border-white/40',
       label: 'Out for Delivery',
       pulse: true,
-      pulseColor: 'bg-[#FF9F0A]'
+      pulseColor: 'bg-white'
     },
     delivered: {
-      color: 'bg-[#30D158]/10 text-[#30D158] border-[#30D158]/30 shadow-[0_0_12px_rgba(48,209,88,0.15)]',
+      color: 'bg-zinc-400/20 text-white border-white/50',
       label: 'Delivered',
       pulse: false
     },
     failed: {
-      color: 'bg-[#FF453A]/10 text-[#FF453A] border-[#FF453A]/30 shadow-[0_0_12px_rgba(255,69,58,0.15)]',
+      color: 'bg-zinc-900/40 text-zinc-500 border-zinc-800',
       label: 'Failed',
       pulse: false
     }
+  };
   };
 
   const current = specs[status] || specs.pending;

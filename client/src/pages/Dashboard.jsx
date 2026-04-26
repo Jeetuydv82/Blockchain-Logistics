@@ -54,20 +54,23 @@ const StatCard = ({ title, value, icon: Icon, iconClass, delay }) => {
   );
 };
 
-const ActivityItem = ({ title, status, time, statusColor }) => {
+const ActivityItem = ({ title, status, time }) => {
+  const isDark = document.documentElement.classList.contains('dark');
+  const accentColor = isDark ? 'rgba(255, 255, 255, 0.7)' : 'rgba(24, 24, 27, 0.7)';
+  
   return (
     <div className="flex items-center justify-between py-3" style={{ borderBottom: '1px solid var(--glass-border)' }}>
       <div className="flex items-center gap-3">
-        <div className="w-2 h-2 rounded-full" style={{ background: statusColor, boxShadow: `0 0 8px ${statusColor}` }} />
+        <div className="w-2 h-2 rounded-full" style={{ background: accentColor, boxShadow: `0 0 8px ${accentColor}` }} />
         <div>
           <p style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>{title}</p>
           <p style={{ color: 'var(--text-tertiary)', fontSize: '12px' }}>{time}</p>
         </div>
       </div>
       <span className="badge" style={{
-        background: `${statusColor}20`,
-        color: statusColor,
-        border: `1px solid ${statusColor}40`
+        background: 'var(--glass-bg)',
+        color: 'var(--text-secondary)',
+        border: '1px solid var(--glass-border)'
       }}>
         {status}
       </span>
@@ -206,14 +209,13 @@ const Dashboard = () => {
                     title={shipment.title}
                     status={shipment.status}
                     time={shipment.time}
-                    statusColor={shipment.statusColor}
                   />
                 ))
               ) : (
                 <>
-                  <ActivityItem title="Electronics Shipment" status="In Transit" time="Today" statusColor="#0071e3" />
-                  <ActivityItem title="Medical Supplies" status="Delivered" time="Yesterday" statusColor="#34c759" />
-                  <ActivityItem title="Auto Parts" status="Pending" time="2 days ago" statusColor="#ff9500" />
+                  <ActivityItem title="Electronics Shipment" status="In Transit" time="Today" />
+                  <ActivityItem title="Medical Supplies" status="Delivered" time="Yesterday" />
+                  <ActivityItem title="Auto Parts" status="Pending" time="2 days ago" />
                 </>
               )}
             </div>
