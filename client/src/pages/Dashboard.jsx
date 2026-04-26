@@ -30,7 +30,6 @@ const StatCard = ({ title, value, icon: Icon, iconClass, delay }) => {
       ref={cardRef}
       initial={{ opacity: 0, y: 24, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      whileHover={{ y: -4, scale: 1.02 }}
       transition={{ type: 'spring', stiffness: 300, damping: 22, delay }}
       onClick={handleClick}
       className="glass-card stat-card"

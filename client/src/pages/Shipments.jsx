@@ -77,7 +77,6 @@ const Shipments = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
                 onClick={() => navigate(`/shipments/${shipment._id}`)}
-                whileHover={{ y: -4, scale: 1.02 }}
                 className="glass-card p-5"
                 style={{ cursor: 'pointer' }}
               >

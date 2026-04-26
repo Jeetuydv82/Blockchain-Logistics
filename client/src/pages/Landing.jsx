@@ -155,7 +155,6 @@ const Landing = () => {
                 initial={{ opacity: 0, y: 30, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ delay: 0.7 + index * 0.12 }}
-                whileHover={{ y: -6, scale: 1.03 }}
                 style={{
                   padding: '28px 20px',
                   borderRadius: '20px',
@@ -213,8 +212,6 @@ const Landing = () => {
             <div className="flex gap-4 justify-center">
               <motion.button
                 onClick={() => navigate('/login')}
-                whileHover={{ y: -3 }}
-                whileTap={{ scale: 0.97 }}
                 style={{
                   padding: '13px 32px',
                   borderRadius: '14px',
@@ -232,8 +229,6 @@ const Landing = () => {
               </motion.button>
               <motion.button
                 onClick={() => navigate('/register')}
-                whileHover={{ y: -3 }}
-                whileTap={{ scale: 0.97 }}
                 className="btn-primary"
                 style={{ padding: '13px 32px', borderRadius: '14px' }}
               >
