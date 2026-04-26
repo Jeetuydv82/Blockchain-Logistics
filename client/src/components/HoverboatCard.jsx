@@ -22,9 +22,9 @@ const HoverboatCard = ({
       whileHover={!prefersReducedMotion ? {
         y: -8,
         scale: 1.02,
-        backgroundColor: 'rgba(139, 92, 246, 0.15)',
-        boxShadow: '0 20px 60px rgba(139, 92, 246, 0.3)',
-        borderColor: 'rgba(139, 92, 246, 0.4)',
+        backgroundColor: 'rgba(212, 212, 216, 0.15)',
+        boxShadow: '0 20px 60px rgba(212, 212, 216, 0.3)',
+        borderColor: 'rgba(212, 212, 216, 0.4)',
       } : {}}
       onMouseDown={onMouseDown}
       style={{

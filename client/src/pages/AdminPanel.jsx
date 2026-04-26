@@ -63,8 +63,8 @@ const AdminPanel = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-12 pt-28 pb-8 relative z-10">
         <div className="mb-8">
           <h1 className="welcome-heading text-3xl flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(16,185,129,0.2)', border: '1px solid rgba(16,185,129,0.35)' }}>
-              <Shield className="w-6 h-6" style={{ color: '#10b981' }} />
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(255, 255, 255,0.2)', border: '1px solid rgba(255, 255, 255,0.35)' }}>
+              <Shield className="w-6 h-6" style={{ color: '#ffffff' }} />
             </div>
             System Administration
           </h1>
@@ -75,14 +75,14 @@ const AdminPanel = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-5">
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-sm stat-label">Total Shipments</h3>
-              <Package className="w-4 h-4" style={{ color: '#10b981' }} />
+              <Package className="w-4 h-4" style={{ color: '#ffffff' }} />
             </div>
             <p className="text-2xl font-bold" style={{ color: darkMode ? '#fff' : '#1e293b' }}>{stats?.totalOrders || 0}</p>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass-card p-5">
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-sm stat-label">Total Revenue (10%)</h3>
-              <Activity className="w-4 h-4" style={{ color: '#10b981' }} />
+              <Activity className="w-4 h-4" style={{ color: '#ffffff' }} />
             </div>
             <p className="text-2xl font-bold" style={{ color: darkMode ? '#fff' : '#1e293b' }}>${stats?.revenue?.toFixed(2) || 0}</p>
           </motion.div>
@@ -96,7 +96,7 @@ const AdminPanel = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass-card p-5">
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-sm stat-label">Transporters</h3>
-              <Truck className="w-4 h-4" style={{ color: '#f59e0b' }} />
+              <Truck className="w-4 h-4" style={{ color: '#a1a1aa' }} />
             </div>
             <p className="text-2xl font-bold" style={{ color: darkMode ? '#fff' : '#1e293b' }}>{transporters.length}</p>
           </motion.div>
@@ -157,8 +157,8 @@ const AdminPanel = () => {
               <div className="space-y-4">
                 {shipments.filter(s => s.status === 'pending').map(shipment => (
                   <div key={shipment._id} className="p-4 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4" style={{ 
-                    background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(139,92,246,0.05)',
-                    border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(139,92,246,0.15)'}`
+                    background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(212, 212, 216,0.05)',
+                    border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(212, 212, 216,0.15)'}`
                   }}>
                     <div>
                       <p className="font-medium" style={{ color: darkMode ? '#fff' : '#1e293b' }}>{shipment.title}</p>
@@ -191,17 +191,17 @@ const AdminPanel = () => {
               <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
                 {users.map(u => (
                   <div key={u._id} className="p-3 rounded-lg flex items-center justify-between" style={{ 
-                    background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(139,92,246,0.05)',
-                    border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(139,92,246,0.15)'}`
+                    background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(212, 212, 216,0.05)',
+                    border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(212, 212, 216,0.15)'}`
                   }}>
                     <div>
                       <p className="text-sm font-medium" style={{ color: darkMode ? '#fff' : '#1e293b' }}>{u.name}</p>
                       <p className="text-xs stat-label">{u.email}</p>
                     </div>
                     <span className="text-[10px] uppercase font-bold px-2 py-1 rounded border" style={{
-                      background: u.role === 'admin' ? 'rgba(16,185,129,0.2)' : u.role === 'transporter' ? 'rgba(245,158,11,0.2)' : 'rgba(139,92,246,0.2)',
-                      color: u.role === 'admin' ? '#10b981' : u.role === 'transporter' ? '#f59e0b' : '#8b5cf6',
-                      borderColor: u.role === 'admin' ? 'rgba(16,185,129,0.35)' : u.role === 'transporter' ? 'rgba(245,158,11,0.35)' : 'rgba(139,92,246,0.35)'
+                      background: u.role === 'admin' ? 'rgba(255, 255, 255,0.2)' : u.role === 'transporter' ? 'rgba(161, 161, 170,0.2)' : 'rgba(212, 212, 216,0.2)',
+                      color: u.role === 'admin' ? '#ffffff' : u.role === 'transporter' ? '#a1a1aa' : '#d4d4d8',
+                      borderColor: u.role === 'admin' ? 'rgba(255, 255, 255,0.35)' : u.role === 'transporter' ? 'rgba(161, 161, 170,0.35)' : 'rgba(212, 212, 216,0.35)'
                     }}>
                       {u.role}
                     </span>

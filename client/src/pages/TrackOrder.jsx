@@ -32,7 +32,7 @@ const TrackOrder = () => {
     return (
       <div className={`min-h-screen flex items-center justify-center p-4 ${darkMode ? 'dark' : 'light'}`}>
         <div className={darkMode ? "dark-bg" : "light-bg"} />
-        <div className="w-8 h-8 border-4 rounded-full animate-spin" style={{ borderColor: '#10b981', borderTopColor: 'transparent' }} />
+        <div className="w-8 h-8 border-4 rounded-full animate-spin" style={{ borderColor: '#ffffff', borderTopColor: 'transparent' }} />
       </div>
     );
   }
@@ -42,8 +42,8 @@ const TrackOrder = () => {
       <div className={`min-h-screen flex items-center justify-center p-4 relative ${darkMode ? 'dark' : 'light'}`}>
         <div className={darkMode ? "dark-bg" : "light-bg"} />
         <div className="glass-card p-8 text-center max-w-md w-full z-10">
-          <div className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center mb-4" style={{ background: 'rgba(16,185,129,0.2)', border: '1px solid rgba(16,185,129,0.35)' }}>
-            <Search className="w-6 h-6" style={{ color: '#10b981' }} />
+          <div className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center mb-4" style={{ background: 'rgba(255, 255, 255,0.2)', border: '1px solid rgba(255, 255, 255,0.35)' }}>
+            <Search className="w-6 h-6" style={{ color: '#ffffff' }} />
           </div>
           <h2 className="text-xl font-bold mb-2" style={{ color: darkMode ? '#fff' : '#1e293b' }}>Not Found</h2>
           <p className="welcome-subtitle mb-6">{error}</p>
@@ -67,13 +67,13 @@ const TrackOrder = () => {
 
       <div className="max-w-3xl mx-auto z-10 relative">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-amber-500 flex items-center justify-center mb-4" style={{ boxShadow: '0 0 30px rgba(16,185,129,0.4)' }}>
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-indigo-500 to-amber-500 flex items-center justify-center mb-4" style={{ boxShadow: '0 0 30px rgba(255, 255, 255,0.4)' }}>
             <Package className="w-8 h-8 text-white" />
           </div>
           <h1 className="welcome-heading text-3xl mb-2">Track Your Shipment</h1>
           <code className="text-sm px-4 py-2 rounded-lg inline-block" style={{ 
-            background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(139,92,246,0.1)', 
-            border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(139,92,246,0.2)'}`,
+            background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(212, 212, 216,0.1)', 
+            border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(212, 212, 216,0.2)'}`,
             color: darkMode ? 'rgba(255,255,255,0.5)' : '#6b7280'
           }}>
             {shipment.trackingId}
@@ -89,19 +89,19 @@ const TrackOrder = () => {
             
             <div className="flex items-center gap-4 mb-2">
               <div className="flex-1 text-center p-4 rounded-xl" style={{ 
-                background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(139,92,246,0.05)',
-                border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(139,92,246,0.15)'}`
+                background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(212, 212, 216,0.05)',
+                border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(212, 212, 216,0.15)'}`
               }}>
-                <MapPin className="w-6 h-6 mx-auto mb-2" style={{ color: '#10b981' }} />
+                <MapPin className="w-6 h-6 mx-auto mb-2" style={{ color: '#ffffff' }} />
                 <p className="text-xs stat-label mb-1">ORIGIN</p>
                 <p className="font-medium" style={{ color: darkMode ? '#fff' : '#1e293b' }}>{shipment.origin}</p>
               </div>
               <ArrowRight className="w-8 h-8 stat-label flex-shrink-0" />
               <div className="flex-1 text-center p-4 rounded-xl" style={{ 
-                background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(139,92,246,0.05)',
-                border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(139,92,246,0.15)'}`
+                background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(212, 212, 216,0.05)',
+                border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(212, 212, 216,0.15)'}`
               }}>
-                <MapPin className="w-6 h-6 mx-auto mb-2" style={{ color: '#14b8a6' }} />
+                <MapPin className="w-6 h-6 mx-auto mb-2" style={{ color: '#d4d4d8' }} />
                 <p className="text-xs stat-label mb-1">DESTINATION</p>
                 <p className="font-medium" style={{ color: darkMode ? '#fff' : '#1e293b' }}>{shipment.destination}</p>
               </div>

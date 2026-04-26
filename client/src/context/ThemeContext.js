@@ -1,21 +1,33 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useLayoutEffect } from 'react';
 
 const ThemeContext = createContext();
+
+const applyTheme = (darkMode) => {
+  const root = document.documentElement;
+  if (darkMode) {
+    root.classList.add('dark');
+    root.classList.remove('light');
+  } else {
+    root.classList.add('light');
+    root.classList.remove('dark');
+  }
+};
 
 export const ThemeProvider = ({ children }) => {
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('darkMode');
-    return saved !== null ? JSON.parse(saved) : true;
+    if (saved !== null) return JSON.parse(saved);
+    return true;
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     localStorage.setItem('darkMode', JSON.stringify(darkMode));
-    if (darkMode) {
-      document.documentElement.classList.remove('light');
-    } else {
-      document.documentElement.classList.add('light');
-    }
+    applyTheme(darkMode);
   }, [darkMode]);
+
+  useLayoutEffect(() => {
+    applyTheme(darkMode);
+  }, []);
 
   const toggleTheme = () => setDarkMode(prev => !prev);
 

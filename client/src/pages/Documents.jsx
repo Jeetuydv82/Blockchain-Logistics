@@ -89,14 +89,14 @@ const Documents = () => {
         <div className="flex gap-4 mb-8">
           <button 
             onClick={() => setActiveTab('upload')} 
-            className={`action-btn ${activeTab === 'upload' ? (darkMode ? '!bg-emerald-500/20 !border-emerald-500/50' : '!bg-violet-100 !border-violet-400') : ''}`}
+            className={`action-btn ${activeTab === 'upload' ? (darkMode ? '!bg-indigo-500/20 !border-indigo-500/50' : '!bg-violet-100 !border-violet-400') : ''}`}
           >
             <Upload className="w-5 h-5" />
             Upload Document
           </button>
           <button 
             onClick={() => setActiveTab('verify')} 
-            className={`action-btn ${activeTab === 'verify' ? (darkMode ? '!bg-emerald-500/20 !border-emerald-500/50' : '!bg-violet-100 !border-violet-400') : ''}`}
+            className={`action-btn ${activeTab === 'verify' ? (darkMode ? '!bg-indigo-500/20 !border-indigo-500/50' : '!bg-violet-100 !border-violet-400') : ''}`}
           >
             <Search className="w-5 h-5" />
             Verify Integrity
@@ -112,26 +112,26 @@ const Documents = () => {
                   <input type="text" placeholder="Shipment ID (Optional)" value={shipmentId} onChange={(e) => setShipmentId(e.target.value)} className="glass-input mb-4" />
                   <div 
                     className="border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all"
-                    style={{ borderColor: darkMode ? 'rgba(255,255,255,0.2)' : 'rgba(139,92,246,0.3)' }}
+                    style={{ borderColor: darkMode ? 'rgba(255,255,255,0.2)' : 'rgba(212, 212, 216,0.3)' }}
                     onClick={() => uploadRef.current.click()}
-                    onMouseEnter={(e) => e.currentTarget.style.background = darkMode ? 'rgba(16,185,129,0.1)' : 'rgba(139,92,246,0.05)'}
+                    onMouseEnter={(e) => e.currentTarget.style.background = darkMode ? 'rgba(255, 255, 255,0.1)' : 'rgba(212, 212, 216,0.05)'}
                     onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                   >
-                    <Upload className="w-8 h-8 mx-auto mb-2" style={{ color: '#10b981' }} />
+                    <Upload className="w-8 h-8 mx-auto mb-2" style={{ color: '#ffffff' }} />
                     <p className="text-sm font-medium" style={{ color: darkMode ? '#fff' : '#1e293b' }}>Click to select file</p>
                     <p className="text-xs stat-label mt-1">Stored securely in registry</p>
                   </div>
                   <input type="file" ref={uploadRef} onChange={handleUpload} className="hidden" />
-                  {uploading && <p className="text-sm text-center mt-4" style={{ color: '#10b981' }}>Processing & Securing...</p>}
+                  {uploading && <p className="text-sm text-center mt-4" style={{ color: '#ffffff' }}>Processing & Securing...</p>}
                 </div>
               ) : (
                 <div>
                   <h3 className="text-lg font-bold mb-4" style={{ color: darkMode ? '#fff' : '#1e293b' }}>Verify File</h3>
                   <div 
                     className="border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all"
-                    style={{ borderColor: darkMode ? 'rgba(255,255,255,0.2)' : 'rgba(139,92,246,0.3)' }}
+                    style={{ borderColor: darkMode ? 'rgba(255,255,255,0.2)' : 'rgba(212, 212, 216,0.3)' }}
                     onClick={() => verifyRef.current.click()}
-                    onMouseEnter={(e) => e.currentTarget.style.background = darkMode ? 'rgba(16,185,129,0.1)' : 'rgba(139,92,246,0.05)'}
+                    onMouseEnter={(e) => e.currentTarget.style.background = darkMode ? 'rgba(255, 255, 255,0.1)' : 'rgba(212, 212, 216,0.05)'}
                     onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                   >
                     <Search className="w-8 h-8 mx-auto mb-2" style={{ color: '#06B6D4' }} />
@@ -143,10 +143,10 @@ const Documents = () => {
                   
                   {verifyResult && (
                     <div className={`mt-6 p-4 rounded-xl border`} style={{ 
-                      background: verifyResult.verified ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
-                      borderColor: verifyResult.verified ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'
+                      background: verifyResult.verified ? 'rgba(255, 255, 255,0.1)' : 'rgba(239,68,68,0.1)',
+                      borderColor: verifyResult.verified ? 'rgba(255, 255, 255,0.3)' : 'rgba(239,68,68,0.3)'
                     }}>
-                      <p className="font-bold flex items-center gap-2" style={{ color: verifyResult.verified ? '#10b981' : '#EF4444' }}>
+                      <p className="font-bold flex items-center gap-2" style={{ color: verifyResult.verified ? '#ffffff' : '#EF4444' }}>
                         {verifyResult.verified ? <CheckCircle className="w-4 h-4" /> : <Hash className="w-4 h-4" />}
                         {verifyResult.message}
                       </p>
@@ -180,11 +180,11 @@ const Documents = () => {
                     {documents.map((doc) => (
                       <tr key={doc._id}>
                         <td className="py-4 flex items-center gap-2" style={{ color: darkMode ? 'rgba(255,255,255,0.8)' : '#1e293b' }}>
-                          <FileText className="w-4 h-4" style={{ color: '#10b981' }} /> {doc.originalName}
+                          <FileText className="w-4 h-4" style={{ color: '#ffffff' }} /> {doc.originalName}
                         </td>
                         <td className="py-4 stat-label">{(doc.fileSize / 1024).toFixed(1)} KB</td>
                         <td className="py-4">
-                          <span className="text-sm font-medium" style={{ color: '#10b981' }}>Verified</span>
+                          <span className="text-sm font-medium" style={{ color: '#ffffff' }}>Verified</span>
                         </td>
                         <td className="py-4 stat-label">{new Date(doc.createdAt).toLocaleDateString()}</td>
                       </tr>

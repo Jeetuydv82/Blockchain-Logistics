@@ -47,8 +47,8 @@ const CreateShipment = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
               <h3 className="text-lg font-bold flex items-center gap-2 border-b pb-2" style={{ color: darkMode ? '#fff' : '#1e293b', borderColor: darkMode ? 'rgba(255,255,255,0.1)' : '#e5e7eb' }}>
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'rgba(16, 185, 129, 0.2)', border: '1px solid rgba(16, 185, 129, 0.35)' }}>
-                  <Package className="w-4 h-4" style={{ color: '#10b981' }} />
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'rgba(255, 255, 255, 0.2)', border: '1px solid rgba(255, 255, 255, 0.35)' }}>
+                  <Package className="w-4 h-4" style={{ color: '#ffffff' }} />
                 </div>
                 Basic Info
               </h3>

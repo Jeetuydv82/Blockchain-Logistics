@@ -28,7 +28,7 @@ const GlassCard = ({
         border: '1px solid rgba(255, 255, 255, 0.08)',
         borderRadius: '20px',
         boxShadow: glow 
-          ? '0 0 30px rgba(139, 92, 246, 0.2), 0 8px 32px rgba(0, 0, 0, 0.4)'
+          ? '0 0 30px rgba(212, 212, 216, 0.2), 0 8px 32px rgba(0, 0, 0, 0.4)'
           : '0 8px 32px rgba(0, 0, 0, 0.4)',
         willChange: 'transform',
         transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',

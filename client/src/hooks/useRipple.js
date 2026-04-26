@@ -40,7 +40,7 @@ const useRipple = () => {
             width: '100%',
             height: '100%',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(139,92,246,0.6), rgba(217,70,239,0.3), transparent)',
+            background: 'radial-gradient(circle, rgba(212, 212, 216,0.6), rgba(217,70,239,0.3), transparent)',
             pointerEvents: 'none',
             transform: 'translate(-50%, -50%)',
           }}

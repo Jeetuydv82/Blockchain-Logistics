@@ -15,7 +15,7 @@ const DarkMapPlaceholder = ({ shipment }) => {
               <path
                 d="M 40 0 L 0 0 0 40"
                 fill="none"
-                stroke="rgba(139, 92, 246, 0.3)"
+                stroke="rgba(212, 212, 216, 0.3)"
                 strokeWidth="0.5"
               />
             </pattern>

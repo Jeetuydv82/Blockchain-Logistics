@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlockLogistics - Supply Chain</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    :root {
+      --bg: #000000;
+      --card-bg: rgba(10, 10, 14, 0.45);
+      --card-border: rgba(255, 255, 255, 0.10);
+      --text: #ffffff;
+      --text-label: rgba(255, 255, 255, 0.35);
+      --input-bg: rgba(255, 255, 255, 0.06);
+      --input-border: rgba(255, 255, 255, 0.10);
+      --input-focus: rgba(255, 255, 255, 0.40);
+      --btn-bg: #ffffff;
+      --btn-text: #000000;
+      --link: rgba(255, 255, 255, 0.35);
+      --link-hover: rgba(255, 255, 255, 0.75);
+      --divider: rgba(255, 255, 255, 0.12);
+    }
+
+    :root.light {
+      --bg: #f0f0f0;
+      --card-bg: rgba(255, 255, 255, 0.45);
+      --card-border: rgba(0, 0, 0, 0.09);
+      --text: #111111;
+      --text-label: rgba(0, 0, 0, 0.38);
+      --input-bg: rgba(0, 0, 0, 0.05);
+      --input-border: rgba(0, 0, 0, 0.10);
+      --input-focus: rgba(0, 0, 0, 0.42);
+      --btn-bg: #111111;
+      --btn-text: #ffffff;
+      --link: rgba(0, 0, 0, 0.35);
+      --link-hover: rgba(0, 0, 0, 0.75);
+      --divider: rgba(0, 0, 0, 0.12);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background 0.5s ease, color 0.5s ease;
+      overflow: hidden;
+    }
+
+    #canvas-container {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .scene {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      animation: fadeUp 0.8s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; }
+    }
+
+    .card-wrap {
+      position: relative;
+      width: 400px;
+      max-height: 90vh;
+      transform-style: preserve-3d;
+      transition: transform 0.75s cubic-bezier(0.38, 0.02, 0.18, 1.05);
+      overflow-y: auto;
+    }
+
+    .card-wrap.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .face {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    .face.back {
+      transform: rotateY(180deg);
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid var(--card-border);
+      border-radius: 26px;
+      padding: 36px 32px;
+      pointer-events: all;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    :root.light .logo-icon {
+      background: linear-gradient(135deg, #111111 0%, #666666 100%);
+    }
+
+    .logo-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    :root.light .logo-icon svg {
+      stroke: #ffffff;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-label);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .heading {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 26px;
+      margin-bottom: 6px;
+    }
+
+    .subtext {
+      font-size: 14px;
+      color: var(--text-label);
+      margin-bottom: 28px;
+    }
+
+    .field {
+      position: relative;
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 14px 46px 14px 16px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .field input::placeholder {
+      color: var(--text-label);
+    }
+
+    .field input:focus {
+      border-color: var(--input-focus);
+      background: var(--card-bg);
+    }
+
+    .field-icon {
+      position: absolute;
+      right: 14px;
+      top: 38px;
+      width: 17px;
+      height: 17px;
+      stroke: var(--text-label);
+      stroke-width: 1.5;
+      fill: none;
+      opacity: 0.35;
+      cursor: pointer;
+    }
+
+    .field-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+
+    .forgot-link {
+      font-size: 13px;
+      color: var(--link);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .forgot-link:hover {
+      color: var(--link-hover);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.99);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 24px 0;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--divider);
+    }
+
+    .divider span {
+      padding: 0 14px;
+      font-size: 12px;
+      color: var(--text-label);
+    }
+
+    .flip-link {
+      display: block;
+      text-align: center;
+      font-size: 14px;
+      color: var(--link);
+      margin-top: 8px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .flip-link:hover {
+      color: var(--link-hover);
+    }
+
+    .flip-link span {
+      font-weight: 500;
+    }
+
+    .badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 28px;
+      padding: 12px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--divider);
+    }
+
+    :root.light .badge {
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #34c759;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .badge-text {
+      font-size: 12px;
+      color: var(--text-label);
+      letter-spacing: 0.02em;
+    }
+
+    .checkbox-field {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .checkbox-field input {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--text);
+    }
+
+    .checkbox-field label {
+      font-size: 13px;
+      color: var(--text-label);
+      line-height: 1.5;
+    }
+
+    .checkbox-field label a {
+      color: var(--text);
+      text-decoration: underline;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      padding: 10px 16px;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .theme-toggle:hover {
+      background: var(--input-bg);
+      border-color: var(--input-border);
+    }
+
+    @media (max-width: 460px) {
+      .card-wrap {
+        width: 92vw;
+      }
+      .card {
+        padding: 28px 24px;
+      }
+      .heading {
+        font-size: 22px;
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--divider);
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container"></div>
+
+  <button class="theme-toggle" id="themeToggle">● Light</button>
+
+  <div class="scene">
+    <div class="card-wrap" id="cardWrap">
+      <!-- LOGIN FACE -->
+      <div class="face front">
+        <div class="card" id="loginCard">
+          <div class="logo-row">
+            <div class="logo-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5"/>
+                <path d="M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <div class="brand">
+              <span class="brand-name">BlockLogistics</span>
+              <span class="brand-sub">Supply Chain</span>
+            </div>
+          </div>
+
+          <h1 class="heading">Welcome back</h1>
+          <p class="subtext">Sign in to your secure account</p>
+
+          <div class="field">
+            <label>Email / Wallet</label>
+            <input type="text" placeholder="you@example.com">
+            <svg class="field-icon" viewBox="0 0 24 24">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+
+          <div class="field">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="••••••••">
+            <svg class="field-icon" id="loginEye" viewBox="0 0 24 24" onclick="togglePassword('login')">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </div>
+
+          <div class="field-actions">
+            <a href="#" class="forgot-link">Forgot password?</a>
+          </div>
+
+          <button class="btn-primary">Sign In</button>
+
+          <div class="divider"><span></span></div>
+
+          <a class="flip-link" onclick="doFlip()">No account? <span>Create one</span></a>
+
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span class="badge-text">⛓ Blockchain Secured</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- REGISTER FACE -->
+      <div class="face back">
+        <div class="card" id="registerCard">
+          <div class="logo-row">
+            <div class="logo-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5"/>
+                <path d="M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <div class="brand">
+              <span class="brand-name">BlockLogistics</span>
+              <span class="brand-sub">Supply Chain</span>
+            </div>
+          </div>
+
+          <h1 class="heading">Create account</h1>
+          <p class="subtext">Join the secure logistics network</p>
+
+          <div class="field">
+            <label>Full Name</label>
+            <input type="text" placeholder="John Doe">
+            <svg class="field-icon" viewBox="0 0 24 24">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+
+          <div class="field">
+            <label>Email</label>
+            <input type="email" placeholder="you@example.com">
+            <svg class="field-icon" viewBox="0 0 24 24">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+
+          <div class="field">
+            <label>Password</label>
+            <input type="password" id="regPassword" placeholder="••••••••">
+            <svg class="field-icon" id="regEye" viewBox="0 0 24 24" onclick="togglePassword('reg')">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </div>
+
+          <div class="field">
+            <label>Confirm Password</label>
+            <input type="password" placeholder="••••••••">
+          </div>
+
+          <div class="checkbox-field">
+            <input type="checkbox" id="terms">
+            <label for="terms">I agree to <a href="#">Terms</a> & <a href="#">Privacy Policy</a></label>
+          </div>
+
+          <button class="btn-primary">Create Account</button>
+
+          <div class="divider"><span></span></div>
+
+          <a class="flip-link" onclick="doFlip()">Already registered? <span>Sign in</span></a>
+
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span class="badge-text">⛓ Blockchain Secured</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // === THREE.JS 3D BLOB ===
+    let scene, camera, renderer, blob;
+    let autoY = 0, autoX = 0;
+    let flipCurrent = 0, flipTarget = 0;
+    let flipped = false;
+
+    // Dark mode uniforms
+    const darkUniforms = {
+      baseColor: { value: new THREE.Vector3(0.028, 0.028, 0.038) },
+      rimColor: { value: new THREE.Vector3(0.62, 0.64, 0.72) },
+      rimPow: { value: 2.8 }
+    };
+
+    // Light mode uniforms
+    const lightUniforms = {
+      baseColor: { value: new THREE.Vector3(0.80, 0.80, 0.82) },
+      rimColor: { value: new THREE.Vector3(0.18, 0.18, 0.22) },
+      rimPow: { value: 2.2 }
+    };
+
+    const vertexShader = `
+      varying vec3 vNormal;
+      varying vec3 vViewDir;
+      uniform vec3 baseColor;
+      uniform vec3 rimColor;
+      uniform float rimPow;
+
+      void main() {
+        vNormal = normalMatrix * normal;
+        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+        vViewDir = normalize(-mvPosition.xyz);
+        gl_Position = projectionMatrix * mvPosition;
+      }
+    `;
+
+    const fragmentShader = `
+      varying vec3 vNormal;
+      varying vec3 vViewDir;
+      uniform vec3 baseColor;
+      uniform vec3 rimColor;
+      uniform float rimPow;
+
+      void main() {
+        float rim = 1.0 - abs(dot(normalize(vNormal), normalize(vViewDir)));
+        rim = pow(rim, rimPow);
+        gl_FragColor = vec4(baseColor + rimColor * rim, 1.0);
+      }
+    `;
+
+    function init() {
+      scene = new THREE.Scene();
+      
+      camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.z = 6.5;
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+      // Check dark mode preference
+      const isDark = localStorage.getItem('theme') !== 'light';
+      
+      scene.background = new THREE.Color(isDark ? 0x000000 : 0xf0f0f0);
+      document.documentElement.classList.toggle('light', !isDark);
+
+      updateThemeButton(isDark);
+
+      const material = new THREE.ShaderMaterial({
+        uniforms: isDark ? darkUniforms : lightUniforms,
+        vertexShader,
+        fragmentShader,
+        side: THREE.DoubleSide
+      });
+
+      // Create superellipsoid geometry
+      const geometry = new THREE.SphereGeometry(1, 80, 80);
+      const positions = geometry.attributes.position;
+      const basePositions = [];
+      const power = 5.5;
+
+      // Pre-compute superellipsoid base
+      for (let i = 0; i < positions.count; i++) {
+        let x = positions.getX(i);
+        let y = positions.getY(i);
+        let z = positions.getZ(i);
+
+        // Superellipsoid formula
+        let ex = Math.sign(x) * Math.pow(Math.abs(x), 2 / power);
+        let ey = Math.sign(y) * Math.pow(Math.abs(y), 2 / power);
+        let ez = Math.sign(z) * Math.pow(Math.abs(z), 2 / power);
+
+        // Normalize
+        const len = Math.sqrt(ex * ex + ey * ey + ez * ez);
+        ex /= len; ey /= len; ez /= len;
+
+        basePositions.push({ x: ex, y: ey, z: ez });
+      }
+
+      blob = new THREE.Mesh(geometry, material);
+      scene.add(blob);
+
+      animate();
+    }
+
+    function noise(x, y, z) {
+      return (
+        Math.sin(x * 1.4 + y * 2.2) * Math.cos(y * 1.8 + z * 1.5) +
+        Math.sin(z * 2.5 + x * 1.2) * Math.cos(x * 2.0 + y * 0.9) +
+        Math.cos(x * 0.8 + z * 2.1 + y * 1.6)
+      ) / 3;
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const time = performance.now() * 0.001;
+      const positions = blob.geometry.attributes.position;
+
+      // Update vertices with noise displacement
+      for (let i = 0; i < positions.count; i++) {
+        const bx = basePositions[i].x;
+        const by = basePositions[i].y;
+        const bz = basePositions[i].z;
+
+        const scale = 2.2 + noise(bx * 1.9 + time * 0.38, by * 1.9 + time * 0.32, bz * 1.9 + time * 0.28) * 0.14 * 2.2;
+
+        positions.setXYZ(i, bx * scale, by * scale, bz * scale);
+      }
+
+      blob.geometry.computeVertexNormals();
+      positions.needsUpdate = true;
+
+      // Rotation
+      autoY += 0.0035;
+      autoX += 0.0018;
+      flipCurrent += (flipTarget - flipCurrent) * 0.055;
+
+      blob.rotation.y = autoY + flipCurrent;
+      blob.rotation.x = autoX;
+
+      renderer.render(scene, camera);
+    }
+
+    // === THEME TOGGLE ===
+    const themeBtn = document.getElementById('themeToggle');
+    let isDark = true;
+
+    function toggleTheme() {
+      isDark = !isDark;
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      
+      document.documentElement.classList.toggle('light', !isDark);
+      scene.background = new THREE.Color(isDark ? 0x000000 : 0xf0f0f0);
+      blob.material.uniforms = isDark ? darkUniforms : lightUniforms;
+
+      updateThemeButton(isDark);
+    }
+
+    function updateThemeButton(dark) {
+      themeBtn.textContent = dark ? '● Light' : '● Dark';
+    }
+
+    themeBtn.addEventListener('click', toggleTheme);
+
+    // Initialize theme from localStorage
+    function initTheme() {
+      isDark = localStorage.getItem('theme') !== 'light';
+      document.documentElement.classList.toggle('light', !isDark);
+      updateThemeButton(isDark);
+    }
+
+    // === CARD FLIP ===
+    function doFlip() {
+      flipped = !flipped;
+      document.getElementById('cardWrap').classList.toggle('flipped', flipped);
+      flipTarget += Math.PI;
+    }
+
+    // === PASSWORD TOGGLE ===
+    function togglePassword(type) {
+      const input = document.getElementById(type + 'Password');
+      const eye = document.getElementById(type + 'Eye');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        eye.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.21m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+      } else {
+        input.type = 'password';
+        eye.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+      }
+    }
+
+    // === RESIZE ===
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // === SET CARD HEIGHT ===
+    function setCardHeight() {
+      const front = document.getElementById('loginCard');
+      const back = document.getElementById('registerCard');
+      const wrap = document.getElementById('cardWrap');
+      
+      const maxHeight = Math.max(front.offsetHeight, back.offsetHeight);
+      wrap.style.height = maxHeight + 'px';
+    }
+
+    // Initialize
+    init();
+    initTheme();
+    setCardHeight();
+  </script>
+</body>
+</html>
