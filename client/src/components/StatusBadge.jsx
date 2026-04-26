@@ -2,7 +2,6 @@ import React from 'react';
 
 const StatusBadge = ({ status }) => {
   const specs = {
-  const specs = {
     pending: {
       color: 'bg-zinc-800/20 text-zinc-400 border-zinc-700/30',
       label: 'Pending',
@@ -40,7 +39,6 @@ const StatusBadge = ({ status }) => {
       label: 'Failed',
       pulse: false
     }
-  };
   };
 
   const current = specs[status] || specs.pending;
