@@ -428,11 +428,11 @@
 }
 
 .dark .welcome-heading {
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--text-primary);
 }
 
 .light .welcome-heading {
-  color: #18181b;
+  color: var(--text-primary);
 }
 
 .welcome-gradient {
@@ -447,11 +447,11 @@
 }
 
 .dark .welcome-subtitle {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-tertiary);
 }
 
 .light .welcome-subtitle {
-  color: #6b7280;
+  color: var(--text-tertiary);
 }
 
 .stat-number {
@@ -462,11 +462,11 @@
 }
 
 .dark .stat-number {
-  color: white;
+  color: var(--text-primary);
 }
 
 .light .stat-number {
-  color: #1e1040;
+  color: var(--text-primary);
 }
 
 .stat-label {
@@ -476,11 +476,11 @@
 }
 
 .dark .stat-label {
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--text-tertiary);
 }
 
 .light .stat-label {
-  color: #9ca3af;
+  color: var(--text-tertiary);
 }
 
 /* === GLASS NAVBAR === */
@@ -741,15 +741,15 @@ html {
 
 .light {
   --accent: #18181b;
-  --accent-green: #52525b;
-  --accent-amber: #71717a;
-  --accent-red: #a1a1aa;
-  --text-primary: #18181b;
-  --text-secondary: #52525b;
-  --text-tertiary: #a1a1aa;
-  --glass-bg: rgba(244, 244, 245, 0.4);
-  --glass-border: rgba(24, 24, 27, 0.08);
-  --bg-primary: #f4f4f5;
+  --accent-green: #27272a;
+  --accent-amber: #3f3f46;
+  --accent-red: #52525b;
+  --text-primary: #09090b;
+  --text-secondary: #3f3f46;
+  --text-tertiary: #71717a;
+  --glass-bg: rgba(24, 24, 27, 0.04);
+  --glass-border: rgba(24, 24, 27, 0.12);
+  --bg-primary: #fdfdfd;
 }
 
 /* === GLASS INPUT === */

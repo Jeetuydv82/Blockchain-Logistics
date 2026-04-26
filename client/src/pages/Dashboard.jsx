@@ -54,13 +54,10 @@ const StatCard = ({ title, value, icon: Icon, iconClass, delay }) => {
 };
 
 const ActivityItem = ({ title, status, time }) => {
-  const isDark = document.documentElement.classList.contains('dark');
-  const accentColor = isDark ? 'rgba(255, 255, 255, 0.7)' : 'rgba(24, 24, 27, 0.7)';
-  
   return (
     <div className="flex items-center justify-between py-3" style={{ borderBottom: '1px solid var(--glass-border)' }}>
       <div className="flex items-center gap-3">
-        <div className="w-2 h-2 rounded-full" style={{ background: accentColor, boxShadow: `0 0 8px ${accentColor}` }} />
+        <div className="w-2 h-2 rounded-full" style={{ background: 'var(--text-secondary)', boxShadow: '0 0 8px var(--glass-border)' }} />
         <div>
           <p style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500 }}>{title}</p>
           <p style={{ color: 'var(--text-tertiary)', fontSize: '12px' }}>{time}</p>
