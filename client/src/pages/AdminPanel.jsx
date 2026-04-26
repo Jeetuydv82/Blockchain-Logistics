@@ -50,15 +50,12 @@ const AdminPanel = () => {
 
   if (loading) return (
     <div className={`min-h-screen relative ${darkMode ? 'dark' : 'light'}`}>
-      <div className={darkMode ? "dark-bg" : "light-bg"} />
       <div className="p-8 max-w-7xl mx-auto"><SkeletonLoader /></div>
     </div>
   );
 
   return (
     <div className={`min-h-screen relative ${darkMode ? 'dark' : 'light'}`}>
-      {/* Animated Background */}
-      <div className={darkMode ? "dark-bg" : "light-bg"} />
       
       <div className="max-w-7xl mx-auto px-6 md:px-12 pt-28 pb-8 relative z-10">
         <div className="mb-8">

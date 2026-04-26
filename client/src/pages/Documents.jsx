@@ -77,8 +77,6 @@ const Documents = () => {
 
   return (
     <div className={`min-h-screen relative ${darkMode ? 'dark' : 'light'}`}>
-      {/* Animated Background */}
-      <div className={darkMode ? "dark-bg" : "light-bg"} />
       
       <div className="max-w-6xl mx-auto px-6 pt-28 pb-8 relative z-10">
         <div className="mb-8">
@@ -108,7 +106,7 @@ const Documents = () => {
             <div className="glass-card p-6">
               {activeTab === 'upload' ? (
                 <div>
-                  <h3 className="text-lg font-bold mb-4" style={{ color: darkMode ? '#fff' : '#1e293b' }}>Secure Upload</h3>
+                  <h3 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)' }}>Secure Upload</h3>
                   <input type="text" placeholder="Shipment ID (Optional)" value={shipmentId} onChange={(e) => setShipmentId(e.target.value)} className="glass-input mb-4" />
                   <div 
                     className="border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all"

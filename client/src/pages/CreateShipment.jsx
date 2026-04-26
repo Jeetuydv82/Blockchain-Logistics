@@ -32,8 +32,6 @@ const CreateShipment = () => {
 
   return (
     <div className={`min-h-screen relative ${darkMode ? 'dark' : 'light'}`}>
-      {/* Animated Background */}
-      <div className={darkMode ? "dark-bg" : "light-bg"} />
       
       <div className="max-w-3xl mx-auto px-6 pt-28 pb-8 relative z-10">
         <div className="mb-8">

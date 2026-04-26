@@ -149,12 +149,11 @@ const ShipmentDetail = () => {
     setEditingTransporter(true);
   };
 
-  if (loading) return <div className="min-h-screen relative"><div className={darkMode ? "dark-bg" : "light-bg"} /><div className="p-8 max-w-4xl mx-auto pt-24"><SkeletonLoader /></div></div>;
-  if (!shipment) return <div className="min-h-screen relative flex items-center justify-center"><div className={darkMode ? "dark-bg" : "light-bg"} /><div className="text-center" style={{ color: darkMode ? '#fff' : '#1e293b' }}>Shipment not found</div></div>;
+  if (loading) return <div className="min-h-screen relative"><div className="p-8 max-w-4xl mx-auto pt-24"><SkeletonLoader /></div></div>;
+  if (!shipment) return <div className="min-h-screen relative flex items-center justify-center"><div className="text-center" style={{ color: 'var(--text-primary)' }}>Shipment not found</div></div>;
 
   return (
     <div className={`min-h-screen relative ${darkMode ? 'dark' : 'light'}`}>
-      <div className={darkMode ? "dark-bg" : "light-bg"} />
       
       <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-white/50 hover:text-white mb-6 relative z-10">
         <ArrowLeft className="w-4 h-4" /> Back to Shipments
@@ -172,8 +171,8 @@ const ShipmentDetail = () => {
                     onChange={(e) => setDetailsForm({...detailsForm, title: e.target.value})}
                     className="glass-input text-xl font-bold !py-1 mb-2"
                   />
-                ) : (
-                  <h1 className="text-2xl font-bold text-white">{shipment.title}</h1>
+                 ) : (
+                  <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{shipment.title}</h1>
                 )}
                 <div style={{ display:'flex', alignItems:'center', gap:'8px', marginTop:'8px' }}>
                   <span style={{

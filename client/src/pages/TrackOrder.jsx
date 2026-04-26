@@ -31,8 +31,7 @@ const TrackOrder = () => {
   if (loading) {
     return (
       <div className={`min-h-screen flex items-center justify-center p-4 ${darkMode ? 'dark' : 'light'}`}>
-        <div className={darkMode ? "dark-bg" : "light-bg"} />
-        <div className="w-8 h-8 border-4 rounded-full animate-spin" style={{ borderColor: '#ffffff', borderTopColor: 'transparent' }} />
+        <div className="w-8 h-8 border-4 rounded-full animate-spin" style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent' }} />
       </div>
     );
   }
@@ -40,7 +39,6 @@ const TrackOrder = () => {
   if (error || !shipment) {
     return (
       <div className={`min-h-screen flex items-center justify-center p-4 relative ${darkMode ? 'dark' : 'light'}`}>
-        <div className={darkMode ? "dark-bg" : "light-bg"} />
         <div className="glass-card p-8 text-center max-w-md w-full z-10">
           <div className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center mb-4" style={{ background: 'rgba(255, 255, 255,0.2)', border: '1px solid rgba(255, 255, 255,0.35)' }}>
             <Search className="w-6 h-6" style={{ color: '#ffffff' }} />
@@ -55,8 +53,6 @@ const TrackOrder = () => {
 
   return (
     <div className={`min-h-screen py-12 px-6 md:px-12 relative overflow-hidden ${darkMode ? 'dark' : 'light'}`}>
-      {/* Animated Background */}
-      <div className={darkMode ? "dark-bg" : "light-bg"} />
       
       {/* Theme Toggle */}
       <div className="absolute top-4 right-4 z-20">
