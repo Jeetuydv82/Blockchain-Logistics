@@ -150,6 +150,7 @@ const Register = () => {
                   required
                   className="glass-input"
                   placeholder="Create a password"
+                  style={{ paddingRight: '48px' }}
                 />
                 <button
                   type="button"
@@ -163,6 +164,7 @@ const Register = () => {
                     border: 'none',
                     cursor: 'pointer',
                     color: 'var(--text-tertiary)',
+                    zIndex: 2
                   }}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -201,6 +203,7 @@ const Register = () => {
                   required
                   className="glass-input"
                   placeholder="Confirm your password"
+                  style={{ paddingRight: '48px' }}
                 />
                 <button
                   type="button"
@@ -214,6 +217,7 @@ const Register = () => {
                     border: 'none',
                     cursor: 'pointer',
                     color: 'var(--text-tertiary)',
+                    zIndex: 2
                   }}
                 >
                   {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}

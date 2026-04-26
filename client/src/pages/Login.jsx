@@ -123,16 +123,16 @@ const Login = () => {
             <div>
               <label style={{ display: 'block', marginBottom: '8px', fontSize: '12px', fontWeight: 600, color: 'var(--text-tertiary)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Password</label>
               <div className="relative">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                className="glass-input"
-                placeholder="••••••••"
-                style={{ paddingRight: '48px' }}
-              />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  className="glass-input"
+                  placeholder="••••••••"
+                  style={{ paddingRight: '48px' }}
+                />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
@@ -145,6 +145,7 @@ const Login = () => {
                   border: 'none',
                   cursor: 'pointer',
                   color: 'var(--text-tertiary)',
+                  zIndex: 2
                 }}
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
