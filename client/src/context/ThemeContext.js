@@ -25,10 +25,6 @@ export const ThemeProvider = ({ children }) => {
     applyTheme(darkMode);
   }, [darkMode]);
 
-  useLayoutEffect(() => {
-    applyTheme(darkMode);
-  }, []);
-
   const toggleTheme = () => setDarkMode(prev => !prev);
 
   return (

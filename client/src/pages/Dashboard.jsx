@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Package, Clock, CheckCircle, Truck, FileText, PlusCircle, TrendingUp, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
 import api from '../services/api';
 import CountUp from '../components/CountUp';
 import ScrollReveal from '../components/ScrollReveal';
@@ -76,7 +75,6 @@ const ActivityItem = ({ title, status, time }) => {
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const { darkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [stats, setStats] = useState({ total: 0, pending: 0, inTransit: 0, delivered: 0 });
   const [loading, setLoading] = useState(true);
