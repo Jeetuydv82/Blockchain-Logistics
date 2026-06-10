@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
@@ -12,11 +12,36 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { register } = useAuth();
+  const { register, loginWithGoogle } = useAuth();
   const { darkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  useEffect(() => {
+    /* global google */
+    if (window.google) {
+      google.accounts.id.initialize({
+        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID || "870631627993-9qplbkvg30r62qdq8gph8pqpkv9g6k8g.apps.googleusercontent.com",
+        callback: async (response) => {
+          setLoading(true);
+          try {
+            await loginWithGoogle(response.credential, formData.role);
+            toast.success('Account created with Google!');
+            navigate('/dashboard');
+          } catch (error) {
+            toast.error(error.response?.data?.message || 'Google Sign-Up failed');
+          } finally {
+            setLoading(false);
+          }
+        }
+      });
+      google.accounts.id.renderButton(
+        document.getElementById("googleSignInButton"),
+        { theme: "outline", size: "large", width: "100%" }
+      );
+    }
+  }, [loginWithGoogle, navigate, formData.role]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -262,6 +287,19 @@ const Register = () => {
               {loading ? 'Creating...' : 'Create Account'}
             </motion.button>
           </form>
+
+          <div className="relative my-6 flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-[var(--glass-border)]"></div>
+            </div>
+            <span className="relative px-3 text-xs uppercase bg-[var(--bg-primary)] text-[var(--text-tertiary)]" style={{ borderRadius: '4px' }}>
+              Or continue with
+            </span>
+          </div>
+
+          <div className="w-full flex justify-center mt-2">
+            <div id="googleSignInButton" className="w-full"></div>
+          </div>
 
           <div className="mt-6 text-center" style={{ color: 'var(--text-secondary)' }}>
             Already have an account?{' '}
