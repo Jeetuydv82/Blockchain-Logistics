@@ -35,6 +35,12 @@ export const AuthProvider = ({ children }) => {
     setUser(res.data);
   };
 
+  const loginWithGithub = async (code, role) => {
+    const res = await api.post('/auth/github', { code, role });
+    localStorage.setItem('token', res.data.token);
+    setUser(res.data);
+  };
+
   const register = async (data) => {
     const res = await api.post('/auth/register', data);
     localStorage.setItem('token', res.data.token);
@@ -47,7 +53,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, loginWithGoogle, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, loginWithGoogle, loginWithGithub, register, logout }}>
       {!loading && children}
     </AuthContext.Provider>
   );

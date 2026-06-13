@@ -7,12 +7,18 @@ import { useTheme } from '../context/ThemeContext';
 import { User, Package, Eye, EyeOff, Sun, Moon } from 'lucide-react';
 import ThreeBackground from '../components/ThreeBackground';
 
+const GithubIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+  </svg>
+);
+
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '', role: 'customer' });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { register, loginWithGoogle } = useAuth();
+  const { register, loginWithGoogle, loginWithGithub } = useAuth();
   const { darkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
@@ -42,6 +48,36 @@ const Register = () => {
       );
     }
   }, [loginWithGoogle, navigate, formData.role]);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    if (code) {
+      const handleCallback = async () => {
+        setLoading(true);
+        try {
+          const role = localStorage.getItem('oauth_role') || 'customer';
+          localStorage.removeItem('oauth_role');
+          await loginWithGithub(code, role);
+          toast.success('Account created with GitHub!');
+          navigate('/dashboard');
+        } catch (error) {
+          toast.error(error.response?.data?.message || 'GitHub Sign-Up failed');
+        } finally {
+          setLoading(false);
+        }
+      };
+      handleCallback();
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [loginWithGithub, navigate]);
+
+  const handleGithubLogin = () => {
+    localStorage.setItem('oauth_role', formData.role);
+    const clientId = process.env.REACT_APP_GITHUB_CLIENT_ID || 'Ov23likuktgAXaaJgEwo';
+    const redirectUri = `${window.location.origin}/login`;
+    window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=user:email`;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -297,8 +333,27 @@ const Register = () => {
             </span>
           </div>
 
-          <div className="w-full flex justify-center mt-2">
+          <div className="w-full flex flex-col gap-3 justify-center mt-2">
             <div id="googleSignInButton" className="w-full"></div>
+            <motion.button
+              type="button"
+              whileTap={{ scale: 0.97 }}
+              onClick={handleGithubLogin}
+              className="w-full flex items-center justify-center gap-2 transition-all hover:bg-[rgba(255,255,255,0.08)]"
+              style={{
+                padding: '10px 16px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid var(--glass-border)',
+                borderRadius: '4px',
+                color: 'var(--text-primary)',
+                fontWeight: 500,
+                fontSize: '14px',
+                cursor: 'pointer'
+              }}
+            >
+              <GithubIcon />
+              Continue with GitHub
+            </motion.button>
           </div>
 
           <div className="mt-6 text-center" style={{ color: 'var(--text-secondary)' }}>

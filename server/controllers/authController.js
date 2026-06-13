@@ -102,3 +102,96 @@ exports.getMe = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.githubLogin = async (req, res) => {
+  try {
+    const { code, role } = req.body;
+    if (!code) {
+      return res.status(400).json({ message: 'Code is required' });
+    }
+
+    // Exchange code for access token
+    const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        client_id: process.env.GITHUB_CLIENT_ID,
+        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        code
+      })
+    });
+
+    if (!tokenResponse.ok) {
+      return res.status(400).json({ message: 'Failed to exchange GitHub authorization code' });
+    }
+
+    const tokenData = await tokenResponse.json();
+    const access_token = tokenData.access_token;
+
+    if (!access_token) {
+      return res.status(400).json({ message: 'No access token returned from GitHub' });
+    }
+
+    // Get GitHub profile
+    const userResponse = await fetch('https://api.github.com/user', {
+      headers: {
+        'Authorization': `Bearer ${access_token}`,
+        'User-Agent': 'blockchain-logistics'
+      }
+    });
+
+    if (!userResponse.ok) {
+      return res.status(400).json({ message: 'Failed to retrieve GitHub user profile' });
+    }
+
+    const githubUser = await userResponse.json();
+
+    // Determine email
+    let email = githubUser.email;
+    if (!email) {
+      const emailsResponse = await fetch('https://api.github.com/user/emails', {
+        headers: {
+          'Authorization': `Bearer ${access_token}`,
+          'User-Agent': 'blockchain-logistics'
+        }
+      });
+      if (emailsResponse.ok) {
+        const emails = await emailsResponse.json();
+        const primaryEmail = emails.find(e => e.primary && e.verified) || emails.find(e => e.verified) || emails[0];
+        if (primaryEmail) {
+          email = primaryEmail.email;
+        }
+      }
+    }
+
+    if (!email) {
+      return res.status(400).json({ message: 'GitHub account must have a verified email address' });
+    }
+
+    // Check if user exists
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      const randomPassword = crypto.randomBytes(16).toString('hex');
+      user = await User.create({
+        name: githubUser.name || githubUser.login || 'GitHub User',
+        email,
+        password: randomPassword,
+        role: role || 'customer'
+      });
+    }
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      token: generateToken(user._id)
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
